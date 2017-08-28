@@ -2,7 +2,6 @@ package com.tunebrains.vectorclocklib;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Build;
@@ -11,7 +10,6 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
-import com.sdsmdg.harjot.vectormaster.models.PathModel;
 
 /**
  * Created by Alexandr Timoshenko <thick.tav@gmail.com> on 8/28/17.
@@ -20,9 +18,18 @@ import com.sdsmdg.harjot.vectormaster.models.PathModel;
 public class VectorDigitalNumber extends View {
     private int currentNumber = -1;
 
-    public interface VectorNumberAnimator{
+    public interface IVectorNumberAnimator {
 
+        Animator goneAnimation(VectorDigitalNumber obj, VectorMasterDrawable bgOld, int oldNumber);
+
+        Animator appearAnimation(VectorDigitalNumber obj, VectorMasterDrawable bgCurrent, int newNumber);
     }
+
+    public void setVectorNumberAnimator(IVectorNumberAnimator vectorNumberAnimator) {
+        this.vectorNumberAnimator = vectorNumberAnimator;
+    }
+
+    IVectorNumberAnimator vectorNumberAnimator;
     VectorMasterDrawable bgOld, bgCurrent;
     public VectorDigitalNumber(Context context) {
         super(context);
@@ -61,58 +68,24 @@ public class VectorDigitalNumber extends View {
     public synchronized void updateView(VectorMasterDrawable drawable, int newNumber){
         if (newNumber == currentNumber)
             return;
+        int oldNumber = currentNumber;
         currentNumber = newNumber;
         bgOld = bgCurrent;
         bgCurrent = drawable;
 
         if (bgOld!=null) {
-            // find the correct path using name
-            final PathModel outline = bgOld.getPathModelByName("outline");
-            //final PathModel outline2 = heartVector.getPathModelByName("outline2");
+            if (vectorNumberAnimator == null)
+                return;
 
-            // set trim path start (values are given in fraction of length)
-            outline.setTrimPathEnd(1.0f);
-            ValueAnimator valueAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
-            valueAnimator.setDuration(1000);
-            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            Animator goneAnimation = vectorNumberAnimator.goneAnimation(this, bgOld, oldNumber);
+            Animator appearAnimation = vectorNumberAnimator.appearAnimation(this,bgCurrent, newNumber);
+            goneAnimation.setDuration(1000);
+            appearAnimation.setDuration(1000);
+            appearAnimation.setStartDelay(900);
 
-                    // set trim end value and update view
-                    outline.setTrimPathEnd((Float) valueAnimator.getAnimatedValue());
-                    synchronized (VectorDigitalNumber.this) {
-                        if (bgOld!=null) {
-                            bgOld.update();
-                        }
-                    }
-                }
-            });
-
-            // find the correct path using name
-            final PathModel outline2 = bgCurrent.getPathModelByName("outline");
-            //final PathModel outline2 = heartVector.getPathModelByName("outline2");
-
-            // set trim path start (values are given in fraction of length)
-            outline2.setTrimPathEnd(0.0f);
-            ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(0.0f, 1.0f);
-            valueAnimator2.setDuration(1000);
-            valueAnimator2.setStartDelay(900);
-            valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-
-                    // set trim end value and update view
-                    outline2.setTrimPathEnd((Float) valueAnimator.getAnimatedValue());
-                    synchronized (VectorDigitalNumber.this) {
-                        if (bgCurrent!=null) {
-                            bgCurrent.update();
-                        }
-                    }
-                }
-            });
 
             AnimatorSet set = new AnimatorSet();
-            set.playTogether(valueAnimator, valueAnimator2);
+            set.playTogether(goneAnimation, appearAnimation);
             set.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
