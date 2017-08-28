@@ -9,6 +9,7 @@
         android:fillType="evenOdd"
         android:strokeColor="#FF0000"
         android:strokeWidth="20"
+        android:name="outline"
         android:strokeLineCap="square"
         android:pathData="M 20 20 L 71.5897857 20 L 126.036047 20 L 135.834569 20 L 135.834569 26.9568353 L 121.824336 56.966932 L 100.993938 101.921792 L 75.7816165 155.799741 L 57.0800744 196.051917 L 45.8228562 220 " />
 </vector>

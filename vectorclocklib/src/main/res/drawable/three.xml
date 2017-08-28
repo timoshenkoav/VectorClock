@@ -9,6 +9,7 @@
         android:fillType="evenOdd"
         android:strokeColor="#FF0000"
         android:strokeWidth="20"
+        android:name="outline"
         android:strokeLineCap="square"
         android:pathData="M22.420344,68.2152965 C22.4114504,67.2467488 22.4262091,66.5171062
 22.4646203,66.026369 C22.6070881,64.2062163 22.866663,62.6497948

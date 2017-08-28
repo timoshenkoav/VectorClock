@@ -7,6 +7,7 @@
 
     <path
         android:fillType="evenOdd"
+        android:name="outline"
         android:strokeColor="#FF0000"
         android:strokeWidth="20"
         android:pathData="M124.433562,67.3161961 C124.410887,66.9162207 124.538916,60.4575363

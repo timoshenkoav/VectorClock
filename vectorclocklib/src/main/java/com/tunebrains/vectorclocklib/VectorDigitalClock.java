@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
@@ -19,7 +20,8 @@ import java.util.Date;
  */
 
 public class VectorDigitalClock extends FrameLayout {
-    ImageView place1, place2, place3, place4;
+    public static final String TAG = "VectorDigitalClock";
+    VectorDigitalNumber place1, place2, place3, place4;
     VectorMasterDrawable bg1, bg2, bg3, bg4;
 
     private boolean is24h;
@@ -72,10 +74,6 @@ public class VectorDigitalClock extends FrameLayout {
 
         setupHours(hours);
         setupMinutes(minutes);
-        place1.setImageDrawable(bg1);
-        place2.setImageDrawable(bg2);
-        place3.setImageDrawable(bg3);
-        place4.setImageDrawable(bg4);
     }
 
     private void setupHours(int hours) {
@@ -84,9 +82,12 @@ public class VectorDigitalClock extends FrameLayout {
 
         int highHourRes = valRes(highHour);
         bg1  =new VectorMasterDrawable(getContext(), highHourRes);
+        place1.updateView(bg1, highHour);
 
         int lowHourRes = valRes(lowHour);
         bg2 = new VectorMasterDrawable(getContext(), lowHourRes);
+        place2.updateView(bg2, lowHour);
+        Log.d(TAG, "Update Hours to: "+highHour + " " + lowHour);
     }
 
     private void setupMinutes(int minutes) {
@@ -95,11 +96,13 @@ public class VectorDigitalClock extends FrameLayout {
 
         int highHourRes = valRes(highHour);
         bg3 = new VectorMasterDrawable(getContext(), highHourRes);
-
+        place3.updateView(bg3, highHour);
 
         int lowHourRes = valRes(lowHour);
 
         bg4 = new VectorMasterDrawable(getContext(), lowHourRes);
+        place4.updateView(bg4, lowHour);
+        Log.d(TAG, "Update Minutes to: "+highHour + " " + lowHour);
     }
 
     private int valRes(int highHour) {

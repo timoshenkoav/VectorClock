@@ -12,11 +12,13 @@
             android:fillType="evenOdd"
             android:strokeColor="#FF0000"
             android:strokeWidth="20"
+            android:name="outline"
             android:strokeLineCap="square"
             android:pathData="M105.843072,86.8113523 L105.843072,199.975574" />
         <path
             android:fillType="evenOdd"
             android:strokeColor="#FF0000"
+
             android:strokeWidth="20"
             android:strokeLineCap="square"
             android:pathData="M 84.9708953 0 L 65.5826898 33.0831349 L 45.5741651 66.9284585 L 27.6740414 97.2691952 L 10.109924 127.438995 L 0 144.942367 L 0 150.514743 L 0 151.919866 L 40.2799061 151.919866 L 72.1879643 151.919866 L 122.382013 151.919866 L 128.881469 151.919866 " />

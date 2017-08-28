@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
-        },2,2, TimeUnit.SECONDS);
+        },3,3, TimeUnit.SECONDS);
     }
 
     @Override

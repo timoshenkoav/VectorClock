@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:orientation="horizontal">
-    <ImageView
+    <com.tunebrains.vectorclocklib.VectorDigitalNumber
         android:id="@+id/place_1"
         android:layout_width="50dp"
         android:layout_height="100dp"
         android:layout_gravity="bottom"
         android:scaleType="fitXY"/>
-    <ImageView
+    <com.tunebrains.vectorclocklib.VectorDigitalNumber
         android:id="@+id/place_2"
         android:layout_width="50dp"
         android:layout_height="100dp"
@@ -23,13 +23,13 @@
         android:layout_height="150dp"
         android:text=":"
         android:gravity="center_vertical"/>
-    <ImageView
+    <com.tunebrains.vectorclocklib.VectorDigitalNumber
         android:id="@+id/place_3"
         android:layout_width="20dp"
         android:scaleType="fitXY"
         android:layout_height="50dp"
         android:layout_gravity="bottom"/>
-    <ImageView
+    <com.tunebrains.vectorclocklib.VectorDigitalNumber
         android:id="@+id/place_4"
         android:layout_width="20dp"
         android:layout_height="50dp"

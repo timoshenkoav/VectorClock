@@ -8,6 +8,7 @@
     <path
         android:fillType="evenOdd"
         android:strokeColor="#FF0000"
+        android:name="outline"
         android:strokeWidth="20"
         android:strokeLineCap="square"
         android:pathData="M129.726719,21.1157371 L116.934107,21.1157371 L104.759243,21.1157371
