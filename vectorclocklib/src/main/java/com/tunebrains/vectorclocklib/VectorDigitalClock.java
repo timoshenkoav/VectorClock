@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
@@ -90,7 +89,8 @@ public class VectorDigitalClock extends FrameLayout {
         int lowHour = minutes % 10;
 
         int highHourRes = valRes(highHour);
-        place3.setImageDrawable(new VectorMasterDrawable(getContext(), highHourRes));
+        VectorMasterDrawable dr = new VectorMasterDrawable(getContext(), highHourRes);
+        place3.setImageDrawable(dr);
 
         int lowHourRes = valRes(lowHour);
         place4.setImageDrawable(new VectorMasterDrawable(getContext(), lowHourRes));

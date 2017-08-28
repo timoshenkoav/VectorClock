@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="446dp"
-    android:height="679dp"
-    android:viewportHeight="679"
-    android:viewportWidth="446">
+    android:width="169dp"
+    android:height="248dp"
+    android:viewportWidth="169"
+    android:viewportHeight="248">
 
     <group
-        android:translateX="20.000000"
-        android:translateY="28.000000">
+            android:translateX="20.000000"
+            android:translateY="28.000000">
         <path
-            android:name="outline2"
-            android:pathData="M333,273.949962 L333,630.469674"
+            android:fillType="evenOdd"
             android:strokeColor="#FF0000"
+            android:strokeWidth="20"
             android:strokeLineCap="square"
-            android:strokeWidth="40"/>
+            android:pathData="M105.843072,86.8113523 L105.843072,199.975574" />
         <path
-            android:name="outline1"
-            android:pathData="M 267.63171 0.0431717603 L 206.570771 104.299921 L 143.556207 210.958598 L 87.1818118 306.573073 L 31.8656298 401.648864 L 0.0255785565 456.80823 L 0.0255785565 474.368772 L 0.0255785565 478.796816 L 126.882543 478.796816 L 227.373328 478.796816 L 385.453753 478.796816 L 405.923048 478.796816 "
+            android:fillType="evenOdd"
             android:strokeColor="#FF0000"
+            android:strokeWidth="20"
             android:strokeLineCap="square"
-            android:strokeWidth="40"/>
-        <clip-path
-            android:pathData="M -100 22 L 446 22 L 446 679 L -100 679 Z"/>
+            android:pathData="M 84.9708953 0 L 65.5826898 33.0831349 L 45.5741651 66.9284585 L 27.6740414 97.2691952 L 10.109924 127.438995 L 0 144.942367 L 0 150.514743 L 0 151.919866 L 40.2799061 151.919866 L 72.1879643 151.919866 L 122.382013 151.919866 L 128.881469 151.919866 " />
     </group>
 </vector>

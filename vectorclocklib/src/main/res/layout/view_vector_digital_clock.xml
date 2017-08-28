@@ -7,14 +7,18 @@
     <ImageView
         android:id="@+id/place_1"
         android:layout_width="50dp"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom"
         android:scaleType="centerInside"/>
     <ImageView
         android:id="@+id/place_2"
         android:layout_width="50dp"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom"
         android:scaleType="centerInside"/>
     <TextView
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_width="wrap_content"
         android:layout_height="150dp"
         android:text=":"
