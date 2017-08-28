@@ -20,6 +20,7 @@ import java.util.Date;
 
 public class VectorDigitalClock extends FrameLayout {
     ImageView place1, place2, place3, place4;
+    VectorMasterDrawable bg1, bg2, bg3, bg4;
 
     private boolean is24h;
     private Calendar calendar;
@@ -71,6 +72,10 @@ public class VectorDigitalClock extends FrameLayout {
 
         setupHours(hours);
         setupMinutes(minutes);
+        place1.setImageDrawable(bg1);
+        place2.setImageDrawable(bg2);
+        place3.setImageDrawable(bg3);
+        place4.setImageDrawable(bg4);
     }
 
     private void setupHours(int hours) {
@@ -78,10 +83,10 @@ public class VectorDigitalClock extends FrameLayout {
         int lowHour = hours % 10;
 
         int highHourRes = valRes(highHour);
-        place1.setImageDrawable(new VectorMasterDrawable(getContext(), highHourRes));
+        bg1  =new VectorMasterDrawable(getContext(), highHourRes);
 
         int lowHourRes = valRes(lowHour);
-        place2.setImageDrawable(new VectorMasterDrawable(getContext(), lowHourRes));
+        bg2 = new VectorMasterDrawable(getContext(), lowHourRes);
     }
 
     private void setupMinutes(int minutes) {
@@ -89,11 +94,12 @@ public class VectorDigitalClock extends FrameLayout {
         int lowHour = minutes % 10;
 
         int highHourRes = valRes(highHour);
-        VectorMasterDrawable dr = new VectorMasterDrawable(getContext(), highHourRes);
-        place3.setImageDrawable(dr);
+        bg3 = new VectorMasterDrawable(getContext(), highHourRes);
+
 
         int lowHourRes = valRes(lowHour);
-        place4.setImageDrawable(new VectorMasterDrawable(getContext(), lowHourRes));
+
+        bg4 = new VectorMasterDrawable(getContext(), lowHourRes);
     }
 
     private int valRes(int highHour) {
