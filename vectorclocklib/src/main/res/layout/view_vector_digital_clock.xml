@@ -9,13 +9,13 @@
         android:layout_width="50dp"
         android:layout_height="100dp"
         android:layout_gravity="bottom"
-        android:scaleType="centerInside"/>
+        android:scaleType="fitXY"/>
     <ImageView
         android:id="@+id/place_2"
         android:layout_width="50dp"
         android:layout_height="100dp"
         android:layout_gravity="bottom"
-        android:scaleType="centerInside"/>
+        android:scaleType="fitXY"/>
     <TextView
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -26,7 +26,7 @@
     <ImageView
         android:id="@+id/place_3"
         android:layout_width="20dp"
-        android:scaleType="centerInside"
+        android:scaleType="fitXY"
         android:layout_height="50dp"
         android:layout_gravity="bottom"/>
     <ImageView
@@ -34,5 +34,5 @@
         android:layout_width="20dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom"
-        android:scaleType="centerInside"/>
+        android:scaleType="fitXY"/>
 </LinearLayout>
