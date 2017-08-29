@@ -11,7 +11,6 @@ import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 import android.widget.FrameLayout;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
@@ -39,7 +38,7 @@ public class VectorDigitalClock extends FrameLayout {
         inflate(getContext(), R.layout.view_vector_digital_clock, this);
         clockView = findViewById(R.id.clock_view);
         calendar = Calendar.getInstance();
-        clockView.setNumberAnimator(new VectorNumberAnimator());
+        clockView.setVectorNumberAnimator(new VectorNumberAnimator());
         is24h = true;
         updateTime(System.currentTimeMillis());
     }
@@ -142,7 +141,7 @@ public class VectorDigitalClock extends FrameLayout {
     private class VectorNumberAnimator implements VectorDigitalNumber.IVectorNumberAnimator{
 
         @Override
-        public Animator goneAnimation(final VectorDigitalNumber obj, final VectorMasterDrawable bgOld, int oldNumber) {
+        public Animator goneAnimation(final Object obj, final VectorMasterDrawable bgOld, int oldNumber) {
             switch (oldNumber){
                 case 4: {
                     // find the correct path using name
@@ -202,7 +201,8 @@ public class VectorDigitalClock extends FrameLayout {
         }
 
         @Override
-        public Animator appearAnimation(final VectorDigitalNumber obj, final VectorMasterDrawable bgCurrent, int newNumber) {
+        public Animator appearAnimation(final Object obj, final VectorMasterDrawable bgCurrent, int newNumber) {
+            Log.d(TAG,"appearAnimation for "+ newNumber);
             switch (newNumber){
                 case 4: {
                     // find the correct path using name
@@ -212,7 +212,7 @@ public class VectorDigitalClock extends FrameLayout {
                     outline.setTrimPathEnd(0.0f);
                     outline2.setTrimPathEnd(0.0f);
                     ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
-                    valueAnimator.setStartDelay(900);
+                    //valueAnimator.setStartDelay(900);
                     valueAnimator.setDuration(1000);
                     valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
@@ -243,7 +243,7 @@ public class VectorDigitalClock extends FrameLayout {
                     // set trim path start (values are given in fraction of length)
                     outline.setTrimPathEnd(0.0f);
                     ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
-                    valueAnimator.setStartDelay(900);
+                    //valueAnimator.setStartDelay(900);
                     valueAnimator.setDuration(1000);
                     valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override

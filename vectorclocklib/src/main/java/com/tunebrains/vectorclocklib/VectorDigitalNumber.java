@@ -20,9 +20,9 @@ public class VectorDigitalNumber extends View {
 
     public interface IVectorNumberAnimator {
 
-        Animator goneAnimation(VectorDigitalNumber obj, VectorMasterDrawable bgOld, int oldNumber);
+        Animator goneAnimation(Object obj, VectorMasterDrawable bgOld, int oldNumber);
 
-        Animator appearAnimation(VectorDigitalNumber obj, VectorMasterDrawable bgCurrent, int newNumber);
+        Animator appearAnimation(Object obj, VectorMasterDrawable bgCurrent, int newNumber);
     }
 
     public void setVectorNumberAnimator(IVectorNumberAnimator vectorNumberAnimator) {

@@ -19,8 +19,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         clock = (VectorDigitalClock) findViewById(R.id.vector_digital_clock);
-        startTime = new Date(2017, 10, 10, 19,10).getTime();
-        clock.updateTime(startTime);
+        startTime = System.currentTimeMillis();
+        //startTime = new Date(2017, 10, 10, 19,10).getTime();
+        //clock.updateTime(startTime);
 
     }
 
@@ -28,18 +29,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         executorService = Executors.newSingleThreadScheduledExecutor();
-        //executorService.scheduleAtFixedRate(new Runnable() {
-        //    @Override
-        //    public void run() {
-        //        startTime += TimeUnit.MINUTES.toMillis(15);
-        //        runOnUiThread(new Runnable() {
-        //            @Override
-        //            public void run() {
-        //                clock.updateTime(startTime);
-        //            }
-        //        });
-        //    }
-        //},3,3, TimeUnit.SECONDS);
+        executorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                startTime += TimeUnit.MINUTES.toMillis(1);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        clock.updateTime(startTime);
+                    }
+                });
+            }
+        },3,3, TimeUnit.SECONDS);
     }
 
     @Override

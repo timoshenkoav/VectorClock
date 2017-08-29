@@ -1,8 +1,10 @@
 package com.tunebrains.vectorclocklib;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
@@ -47,7 +49,7 @@ public class DigitalClockView extends View {
         return 0;
     }
 
-    public void updateTime(int hours, int minutes) {
+    public synchronized void updateTime(int hours, int minutes) {
 
         VectorMasterDrawable p1 = null, p2, p3, p4;
         if (hours / 10 != 0) {
@@ -56,22 +58,106 @@ public class DigitalClockView extends View {
         p2 = new VectorMasterDrawable(getContext(), valRes(hours % 10));
         p3 = new VectorMasterDrawable(getContext(), valRes(minutes / 10));
         p4 = new VectorMasterDrawable(getContext(), valRes(minutes % 10));
-        place1.number = hours / 10;
-        place2.number = hours % 10;
-        place3.number = minutes / 10;
-        place4.number = minutes % 10;
-        if (place1.bgOld == null) {
-            place1.bgCurrent = p1;
+
+        if (hours / 10 != place1.number) {
+            updateNumber(place1, hours / 10, p1);
         }
-        if (place2.bgOld == null) {
-            place2.bgCurrent = p2;
+
+        if (hours % 10 != place2.number) {
+            updateNumber(place2, hours % 10, p2);
         }
-        if (place3.bgOld == null) {
-            place3.bgCurrent = p3;
+
+        if (place3.number != minutes / 10) {
+            updateNumber(place3, minutes / 10, p3);
         }
-        if (place4.bgOld == null) {
+
+        if (place4.number != minutes % 10) {
+            updateNumber(place4, minutes % 10, p4);
+        }
+
+        //calc new place
+        AnimatorSet placeAnimator = new AnimatorSet();
+        int left = 0;
+        ValueAnimator x1 = ValueAnimator.ofInt(place1.x, left);
+        x1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                place1.x = (int) valueAnimator.getAnimatedValue();
+            }
+        });
+        left += calcWidth(place1.bgCurrent);
+        ValueAnimator x2 = ValueAnimator.ofInt(place2.x, left);
+        x2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                place2.x = (int) valueAnimator.getAnimatedValue();
+            }
+        });
+        left += calcWidth(place2.bgCurrent);
+        ValueAnimator x3 = ValueAnimator.ofInt(place3.x, left);
+        x3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                place3.x = (int) valueAnimator.getAnimatedValue();
+            }
+        });
+        left += calcWidth(place3.bgCurrent,SMALL_NUMBER_PERCENT);
+        ValueAnimator x4 = ValueAnimator.ofInt(place4.x, left);
+        x4.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                place4.x = (int) valueAnimator.getAnimatedValue();
+            }
+        });
+        placeAnimator.playTogether(x1,x2,x3,x4);
+        placeAnimator.setDuration(1000);
+        placeAnimator.start();
+    }
+
+    private Animator updateNumber(final NumberHolder place4, int newNumber, VectorMasterDrawable p4) {
+        int oldNumber = place4.number;
+        place4.number = newNumber;
+        if (place4.bgCurrent == null) {
             place4.bgCurrent = p4;
+            calcPlace();
+        } else {
+            place4.bgOld = place4.bgCurrent;
+            place4.bgCurrent = p4;
+            Animator goneAnimation = vectorNumberAnimator.goneAnimation(this, place4.bgOld, oldNumber);
+            Animator appearAnimation = vectorNumberAnimator.appearAnimation(this, place4.bgCurrent, newNumber);
+            goneAnimation.setDuration(1000);
+            appearAnimation.setDuration(1000);
+            appearAnimation.setStartDelay(900);
+
+            AnimatorSet set = new AnimatorSet();
+            set.playTogether(goneAnimation, appearAnimation);
+            set.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    synchronized (DigitalClockView.this) {
+                        place4.bgOld = null;
+                    }
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+            set.start();
+            return set;
         }
+        return null;
     }
 
     private class NumberHolder {
@@ -79,17 +165,17 @@ public class DigitalClockView extends View {
         VectorMasterDrawable bgCurrent;
         int x;
         int y;
-        public int number;
+        public int number = -1;
     }
 
     NumberHolder place1, place2, place3, place4;
     boolean initialSet;
 
-    public void setNumberAnimator(VectorDigitalNumber.IVectorNumberAnimator numberAnimator) {
-        this.numberAnimator = numberAnimator;
+    public void setVectorNumberAnimator(VectorDigitalNumber.IVectorNumberAnimator vectorNumberAnimator) {
+        this.vectorNumberAnimator = vectorNumberAnimator;
     }
 
-    VectorDigitalNumber.IVectorNumberAnimator numberAnimator;
+    VectorDigitalNumber.IVectorNumberAnimator vectorNumberAnimator;
 
     public DigitalClockView(Context context) {
         super(context);
@@ -125,43 +211,46 @@ public class DigitalClockView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        calcPlace();
+        if (getMeasuredHeight() == 0 )
+            return;
 
         canvas.save();
         canvas.translate(place1.x, place1.y);
-        if (place1.bgCurrent != null) {
-            place1.bgCurrent.setBounds(0, 0, calcWidth(place1.bgCurrent), getMeasuredHeight());
-
-            place1.bgCurrent.draw(canvas);
-        }
+        drawNumber(canvas, place1.bgOld, 100);
+        drawNumber(canvas, place1.bgCurrent, 100);
         canvas.restore();
 
         canvas.save();
         canvas.translate(place2.x, place2.y);
-        if (place2.bgCurrent != null) {
-            place2.bgCurrent.setBounds(0, 0, calcWidth(place2.bgCurrent), getMeasuredHeight());
-            drawInstinct(canvas, place2.bgCurrent, Color.BLUE);
-            place2.bgCurrent.draw(canvas);
-        }
+        drawNumber(canvas, place2.bgOld, 100);
+        drawNumber(canvas, place2.bgCurrent, 100);
         canvas.restore();
 
         canvas.save();
         canvas.translate(place3.x, place3.y);
-        if (place3.bgCurrent != null) {
-            canvas.translate(0, getMeasuredHeight() - getMeasuredHeight() * SMALL_NUMBER_PERCENT / 100);
-            place3.bgCurrent.setBounds(0, 0, calcWidth(place3.bgCurrent, SMALL_NUMBER_PERCENT), getMeasuredHeight() * SMALL_NUMBER_PERCENT / 100);
-            place3.bgCurrent.draw(canvas);
-        }
+        drawNumber(canvas, place3.bgOld, SMALL_NUMBER_PERCENT);
+        drawNumber(canvas, place3.bgCurrent, SMALL_NUMBER_PERCENT);
         canvas.restore();
+
         canvas.save();
         canvas.translate(place4.x, place4.y);
-        if (place4.bgCurrent != null) {
-            canvas.translate(0, getMeasuredHeight() - getMeasuredHeight() * SMALL_NUMBER_PERCENT / 100);
-            place4.bgCurrent.setBounds(0, 0, calcWidth(place4.bgCurrent, SMALL_NUMBER_PERCENT), getMeasuredHeight() * SMALL_NUMBER_PERCENT / 100);
-            place4.bgCurrent.draw(canvas);
-        }
+
+        drawNumber(canvas, place4.bgOld, SMALL_NUMBER_PERCENT);
+        drawNumber(canvas, place4.bgCurrent, SMALL_NUMBER_PERCENT);
+
         canvas.restore();
         invalidate();
+    }
+
+    private void drawNumber(Canvas canvas, VectorMasterDrawable bgCurrent, int percent) {
+        int c = canvas.save();
+        if (bgCurrent != null) {
+            bgCurrent.setBounds(0, 0, calcWidth(bgCurrent, percent), getMeasuredHeight() * percent / 100);
+            canvas.translate(0, getMeasuredHeight() - getMeasuredHeight() * percent / 100);
+            bgCurrent.draw(canvas);
+            canvas.translate(0, -(getMeasuredHeight() - getMeasuredHeight() * percent / 100));
+        }
+        canvas.restoreToCount(c);
     }
 
     private void drawInstinct(Canvas canvas, VectorMasterDrawable place1, int color) {
@@ -188,5 +277,12 @@ public class DigitalClockView extends View {
     private int calcWidth(VectorMasterDrawable drawable, int perc) {
         if (drawable == null) { return 0; }
         return Math.round(drawable.getIntrinsicWidth() * ((getMeasuredHeight() * perc / 100) / (float) drawable.getIntrinsicHeight()));
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        calcPlace();
     }
 }
