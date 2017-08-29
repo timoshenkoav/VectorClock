@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
@@ -32,7 +31,7 @@ public class DigitalClockView extends View {
 
     public synchronized void updateTime(int hours, int minutes) {
 
-        if (getMeasuredHeight() == 0){
+        if (getMeasuredHeight() == 0) {
             scheduledUpdateHour = hours;
             scheduledUpdateMinutes = minutes;
             return;
@@ -217,7 +216,18 @@ public class DigitalClockView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (getMeasuredHeight() == 0) { return; }
+        if (getMeasuredHeight() == 0) {
+            invalidate();
+            return;
+        }
+
+        if (scheduledUpdateHour != -1) {
+            updateTime(scheduledUpdateHour, scheduledUpdateMinutes);
+            calcPlace();
+            scheduledUpdateHour = scheduledUpdateMinutes = -1;
+            invalidate();
+            return;
+        }
 
         canvas.save();
         canvas.translate(place1.x, place1.y);
@@ -287,17 +297,9 @@ public class DigitalClockView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        if (scheduledUpdateHour!=-1){
-            updateTime(scheduledUpdateHour, scheduledUpdateMinutes);
-            calcPlace();
-            scheduledUpdateHour = scheduledUpdateMinutes = -1;
-            return;
-        }
-        calcPlace();
     }
 
-    private int getTotalWidth(){
+    private int getTotalWidth() {
 
         int left = calcWidth(place1.bgCurrent) + numberSpace;
         left += calcWidth(place2.bgCurrent) + numberSpace;
@@ -307,7 +309,7 @@ public class DigitalClockView extends View {
         return left;
     }
 
-    private int getLeftMargin(){
-        return (getMeasuredWidth() - getTotalWidth())/2;
+    private int getLeftMargin() {
+        return (getMeasuredWidth() - getTotalWidth()) / 2;
     }
 }
