@@ -24,7 +24,7 @@ import java.util.Date;
 
 public class VectorDigitalClock extends FrameLayout {
     public static final String TAG = "VectorDigitalClock";
-    VectorDigitalNumber place1, place2, place3, place4;
+    DigitalClockView clockView;
     VectorMasterDrawable bg1, bg2, bg3, bg4;
 
     private boolean is24h;
@@ -37,15 +37,9 @@ public class VectorDigitalClock extends FrameLayout {
 
     private void init() {
         inflate(getContext(), R.layout.view_vector_digital_clock, this);
+        clockView = findViewById(R.id.clock_view);
         calendar = Calendar.getInstance();
-        place1 = findViewById(R.id.place_1);
-        place1.setVectorNumberAnimator(new VectorNumberAnimator());
-        place2 = findViewById(R.id.place_2);
-        place2.setVectorNumberAnimator(new VectorNumberAnimator());
-        place3 = findViewById(R.id.place_3);
-        place3.setVectorNumberAnimator(new VectorNumberAnimator());
-        place4 = findViewById(R.id.place_4);
-        place4.setVectorNumberAnimator(new VectorNumberAnimator());
+        clockView.setNumberAnimator(new VectorNumberAnimator());
         is24h = true;
         updateTime(System.currentTimeMillis());
     }
@@ -79,8 +73,9 @@ public class VectorDigitalClock extends FrameLayout {
         int hours = calendar.get(is24h ? Calendar.HOUR_OF_DAY : Calendar.HOUR);
         int minutes = calendar.get(Calendar.MINUTE);
 
-        setupHours(hours);
-        setupMinutes(minutes);
+        clockView.updateTime(hours, minutes);
+        //setupHours(hours);
+        //setupMinutes(minutes);
     }
 
     private void setupHours(int hours) {
@@ -88,33 +83,34 @@ public class VectorDigitalClock extends FrameLayout {
         int lowHour = hours % 10;
 
         int highHourRes = valRes(highHour);
-        if (highHour == 0){
-            place1.setVisibility(View.GONE);
-        }else {
-            place1.setVisibility(VISIBLE);
-            bg1 = new VectorMasterDrawable(getContext(), highHourRes);
-            place1.updateView(bg1, highHour);
-        }
 
-        int lowHourRes = valRes(lowHour);
-        bg2 = new VectorMasterDrawable(getContext(), lowHourRes);
-        place2.updateView(bg2, lowHour);
-        Log.d(TAG, "Update Hours to: " + highHour + " " + lowHour);
+        //if (highHour == 0){
+        //    place1.setVisibility(View.GONE);
+        //}else {
+        //    place1.setVisibility(VISIBLE);
+        //    bg1 = new VectorMasterDrawable(getContext(), highHourRes);
+        //    place1.updateView(bg1, highHour);
+        //}
+        //
+        //int lowHourRes = valRes(lowHour);
+        //bg2 = new VectorMasterDrawable(getContext(), lowHourRes);
+        //place2.updateView(bg2, lowHour);
+        //Log.d(TAG, "Update Hours to: " + highHour + " " + lowHour);
     }
 
     private void setupMinutes(int minutes) {
-        int highHour = minutes / 10;
-        int lowHour = minutes % 10;
-
-        int highHourRes = valRes(highHour);
-        bg3 = new VectorMasterDrawable(getContext(), highHourRes);
-        place3.updateView(bg3, highHour);
-
-        int lowHourRes = valRes(lowHour);
-
-        bg4 = new VectorMasterDrawable(getContext(), lowHourRes);
-        place4.updateView(bg4, lowHour);
-        Log.d(TAG, "Update Minutes to: " + highHour + " " + lowHour);
+        //int highHour = minutes / 10;
+        //int lowHour = minutes % 10;
+        //
+        //int highHourRes = valRes(highHour);
+        //bg3 = new VectorMasterDrawable(getContext(), highHourRes);
+        //place3.updateView(bg3, highHour);
+        //
+        //int lowHourRes = valRes(lowHour);
+        //
+        //bg4 = new VectorMasterDrawable(getContext(), lowHourRes);
+        //place4.updateView(bg4, lowHour);
+        //Log.d(TAG, "Update Minutes to: " + highHour + " " + lowHour);
     }
 
     private int valRes(int highHour) {

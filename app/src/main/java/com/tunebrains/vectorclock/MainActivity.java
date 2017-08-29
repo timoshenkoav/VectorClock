@@ -3,6 +3,7 @@ package com.tunebrains.vectorclock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.tunebrains.vectorclocklib.VectorDigitalClock;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -18,8 +19,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         clock = (VectorDigitalClock) findViewById(R.id.vector_digital_clock);
-        startTime = System.currentTimeMillis();
-
+        startTime = new Date(2017, 10, 10, 19,10).getTime();
+        clock.updateTime(startTime);
 
     }
 
@@ -27,18 +28,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                startTime += TimeUnit.MINUTES.toMillis(15);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        clock.updateTime(startTime);
-                    }
-                });
-            }
-        },3,3, TimeUnit.SECONDS);
+        //executorService.scheduleAtFixedRate(new Runnable() {
+        //    @Override
+        //    public void run() {
+        //        startTime += TimeUnit.MINUTES.toMillis(15);
+        //        runOnUiThread(new Runnable() {
+        //            @Override
+        //            public void run() {
+        //                clock.updateTime(startTime);
+        //            }
+        //        });
+        //    }
+        //},3,3, TimeUnit.SECONDS);
     }
 
     @Override
