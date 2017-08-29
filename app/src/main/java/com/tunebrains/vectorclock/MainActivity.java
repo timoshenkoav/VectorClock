@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         clock.setNumberScale(50);
         //clock.setNumberWidth(getResources().getDimension(R.dimen.number_width));
         //startTime = System.currentTimeMillis();
-        startTime = new Date(2017, 10, 10, 0,3).getTime();
+        startTime = new Date(2017, 10, 10, 0,58).getTime();
 
 
     }

@@ -12,6 +12,7 @@ import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
@@ -24,8 +25,8 @@ import java.util.Date;
 
 public class VectorDigitalClock extends FrameLayout {
     public static final String TAG = "VectorDigitalClock";
+    public static final int DEFAULT_ANIMATE_DURATION = 700;
     DigitalClockView clockView;
-    VectorMasterDrawable bg1, bg2, bg3, bg4;
 
     private boolean is24h;
     private Calendar calendar;
@@ -156,7 +157,12 @@ public class VectorDigitalClock extends FrameLayout {
         clockView.setNumberScale(percent);
     }
 
-    private class VectorNumberAnimator implements VectorDigitalNumber.IVectorNumberAnimator{
+    private class VectorNumberAnimator implements IVectorNumberAnimator{
+
+        @Override
+        public long getDuration() {
+            return DEFAULT_ANIMATE_DURATION;
+        }
 
         @Override
         public VectorMasterDrawable getNumber(int number) {
@@ -200,7 +206,6 @@ public class VectorDigitalClock extends FrameLayout {
                 case 5:
                 case 6:
                 case 8:
-
                 case 7:
                 case 3:{
                     // find the correct path using name
@@ -209,8 +214,7 @@ public class VectorDigitalClock extends FrameLayout {
                     outline.setTrimPathStart(0.0f);
                     outline.setTrimPathEnd(1.0f);
                     ValueAnimator valueAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
-                    //valueAnimator.setStartDelay(900);
-                    valueAnimator.setDuration(1000);
+                    valueAnimator.setDuration(DEFAULT_ANIMATE_DURATION);
                     valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -223,6 +227,7 @@ public class VectorDigitalClock extends FrameLayout {
                             }
                         }
                     });
+                    valueAnimator.setInterpolator(new AccelerateInterpolator());
                     return valueAnimator;
                 }
                 case 4: {
@@ -232,7 +237,7 @@ public class VectorDigitalClock extends FrameLayout {
                     // set trim path start (values are given in fraction of length)
                     outline.setTrimPathEnd(1.0f);
                     ValueAnimator valueAnimator1 = ValueAnimator.ofFloat(1.0f, 0.0f);
-                    valueAnimator1.setDuration(300);
+                    valueAnimator1.setDuration(DEFAULT_ANIMATE_DURATION/2);
                     valueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -248,7 +253,7 @@ public class VectorDigitalClock extends FrameLayout {
 
                     outline2.setTrimPathEnd(1.0f);
                     ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(1.0f, 0.0f);
-                    valueAnimator2.setDuration(100);
+                    valueAnimator2.setDuration(DEFAULT_ANIMATE_DURATION/2);
                     valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -263,6 +268,7 @@ public class VectorDigitalClock extends FrameLayout {
                     });
 
                     AnimatorSet four = new AnimatorSet();
+                    four.setInterpolator(new AccelerateInterpolator());
                     four.playTogether(valueAnimator2,valueAnimator1);
                     return four;
                 }
@@ -270,15 +276,12 @@ public class VectorDigitalClock extends FrameLayout {
                 case 1:
                 case 2:
                 case 9:
-
-
-
                     // find the correct path using name
                     final PathModel outline = bgOld.getPathModelByName("outline");
                     // set trim path start (values are given in fraction of length)
                     outline.setTrimPathEnd(1.0f);
                     ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
-                    valueAnimator.setDuration(1000);
+                    valueAnimator.setDuration(DEFAULT_ANIMATE_DURATION);
                     valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -291,6 +294,7 @@ public class VectorDigitalClock extends FrameLayout {
                             }
                         }
                     });
+                    valueAnimator.setInterpolator(new AccelerateInterpolator());
                     return valueAnimator;
             }
             return null;
@@ -314,7 +318,7 @@ public class VectorDigitalClock extends FrameLayout {
                     outline.setTrimPathStart(1.0f);
                     ValueAnimator valueAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
                     //valueAnimator.setStartDelay(900);
-                    valueAnimator.setDuration(1000);
+                    valueAnimator.setDuration(DEFAULT_ANIMATE_DURATION);
                     valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -327,6 +331,7 @@ public class VectorDigitalClock extends FrameLayout {
                             }
                         }
                     });
+                    valueAnimator.setInterpolator(new AccelerateInterpolator());
                     return valueAnimator;
                 }
                 case 4: {
@@ -337,7 +342,7 @@ public class VectorDigitalClock extends FrameLayout {
                     outline.setTrimPathEnd(1.0f);
                     outline.setTrimPathStart(1.0f);
                     ValueAnimator valueAnimator1 = ValueAnimator.ofFloat(1.0f, 0.0f);
-                    valueAnimator1.setDuration(300);
+                    valueAnimator1.setDuration(DEFAULT_ANIMATE_DURATION/2);
                     valueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -353,7 +358,7 @@ public class VectorDigitalClock extends FrameLayout {
 
                     outline2.setTrimPathStart(1.0f);
                     ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(1.0f, 0.0f);
-                    valueAnimator2.setDuration(100);
+                    valueAnimator2.setDuration(DEFAULT_ANIMATE_DURATION/2);
                     valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -368,6 +373,7 @@ public class VectorDigitalClock extends FrameLayout {
                     });
 
                     AnimatorSet four = new AnimatorSet();
+                    four.setInterpolator(new AccelerateInterpolator());
                     four.playTogether(valueAnimator1,valueAnimator2);
                     return four;
                 }
@@ -382,7 +388,7 @@ public class VectorDigitalClock extends FrameLayout {
                     outline.setTrimPathEnd(0.0f);
                     ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
                     //valueAnimator.setStartDelay(900);
-                    valueAnimator.setDuration(1000);
+                    valueAnimator.setDuration(DEFAULT_ANIMATE_DURATION);
                     valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -395,6 +401,7 @@ public class VectorDigitalClock extends FrameLayout {
                             }
                         }
                     });
+                     valueAnimator.setInterpolator(new AccelerateInterpolator());
                     return valueAnimator;
                 }
             }

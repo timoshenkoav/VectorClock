@@ -105,7 +105,7 @@ public class DigitalClockView extends View {
             }
         });
         placeAnimator.playTogether(x1, x2, x3, x4);
-        placeAnimator.setDuration(1000);
+        placeAnimator.setDuration(vectorNumberAnimator.getDuration());
         placeAnimator.start();
     }
 
@@ -121,13 +121,13 @@ public class DigitalClockView extends View {
         List<Animator> animatorList = new ArrayList<>();
         Animator goneAnimation = vectorNumberAnimator.goneAnimation(this, place4.bgOld, oldNumber);
         if (goneAnimation != null) {
-            goneAnimation.setDuration(1000);
+            goneAnimation.setDuration(vectorNumberAnimator.getDuration());
             animatorList.add(goneAnimation);
         }
         Animator appearAnimation = vectorNumberAnimator.appearAnimation(this, place4.bgCurrent, newNumber);
         if (appearAnimation != null) {
-            appearAnimation.setDuration(1000);
-            appearAnimation.setStartDelay(900);
+            appearAnimation.setDuration(vectorNumberAnimator.getDuration());
+            appearAnimation.setStartDelay(Math.round(vectorNumberAnimator.getDuration()*0.9f));
             animatorList.add(appearAnimation);
         }
 
@@ -181,11 +181,11 @@ public class DigitalClockView extends View {
     NumberHolder place1, place2, place3, place4;
     boolean initialSet;
 
-    public void setVectorNumberAnimator(VectorDigitalNumber.IVectorNumberAnimator vectorNumberAnimator) {
+    public void setVectorNumberAnimator(IVectorNumberAnimator vectorNumberAnimator) {
         this.vectorNumberAnimator = vectorNumberAnimator;
     }
 
-    VectorDigitalNumber.IVectorNumberAnimator vectorNumberAnimator;
+    IVectorNumberAnimator vectorNumberAnimator;
 
     public DigitalClockView(Context context) {
         super(context);
