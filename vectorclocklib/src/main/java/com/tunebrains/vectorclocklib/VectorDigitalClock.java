@@ -1,6 +1,7 @@
 package com.tunebrains.vectorclocklib;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Build;
@@ -45,7 +46,7 @@ public class VectorDigitalClock extends FrameLayout {
         calendar = Calendar.getInstance();
         clockView.setVectorNumberAnimator(new VectorNumberAnimator());
         is24h = true;
-        updateTime(System.currentTimeMillis());
+        //updateTime(System.currentTimeMillis());
     }
 
     public VectorDigitalClock(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -196,22 +197,25 @@ public class VectorDigitalClock extends FrameLayout {
         @Override
         public Animator goneAnimation(final Object obj, final VectorMasterDrawable bgOld, int oldNumber) {
             switch (oldNumber){
-                case 4: {
+                case 5:
+                case 6:
+                case 8:
+
+                case 7:
+                case 3:{
                     // find the correct path using name
-                    final PathModel outline = bgOld.getPathModelByName("outline1");
-                    final PathModel outline2 = bgOld.getPathModelByName("outline2");
+                    final PathModel outline = bgOld.getPathModelByName("outline");
                     // set trim path start (values are given in fraction of length)
+                    outline.setTrimPathStart(0.0f);
                     outline.setTrimPathEnd(1.0f);
-                    outline2.setTrimPathEnd(1.0f);
                     ValueAnimator valueAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
-                    valueAnimator.setStartDelay(900);
+                    //valueAnimator.setStartDelay(900);
                     valueAnimator.setDuration(1000);
                     valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
                             // set trim end value and update view
                             outline.setTrimPathEnd((Float) valueAnimator.getAnimatedValue());
-                            outline2.setTrimPathEnd((Float) valueAnimator.getAnimatedValue());
                             synchronized (obj) {
                                 if (bgOld != null) {
                                     bgOld.update();
@@ -221,26 +225,65 @@ public class VectorDigitalClock extends FrameLayout {
                     });
                     return valueAnimator;
                 }
+                case 4: {
+                    // find the correct path using name
+                    final PathModel outline = bgOld.getPathModelByName("outline1");
+                    final PathModel outline2 = bgOld.getPathModelByName("outline2");
+                    // set trim path start (values are given in fraction of length)
+                    outline.setTrimPathEnd(1.0f);
+                    ValueAnimator valueAnimator1 = ValueAnimator.ofFloat(1.0f, 0.0f);
+                    valueAnimator1.setDuration(300);
+                    valueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            // set trim end value and update view
+                            outline.setTrimPathEnd((Float) valueAnimator.getAnimatedValue());
+                            synchronized (obj) {
+                                if (bgOld != null) {
+                                    bgOld.update();
+                                }
+                            }
+                        }
+                    });
+
+                    outline2.setTrimPathEnd(1.0f);
+                    ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(1.0f, 0.0f);
+                    valueAnimator2.setDuration(100);
+                    valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            // set trim end value and update view
+                            outline2.setTrimPathEnd((Float) valueAnimator.getAnimatedValue());
+                            synchronized (obj) {
+                                if (bgOld != null) {
+                                    bgOld.update();
+                                }
+                            }
+                        }
+                    });
+
+                    AnimatorSet four = new AnimatorSet();
+                    four.playTogether(valueAnimator2,valueAnimator1);
+                    return four;
+                }
                 case 0:
                 case 1:
                 case 2:
-                case 3:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
                 case 9:
+
+
+
                     // find the correct path using name
                     final PathModel outline = bgOld.getPathModelByName("outline");
                     // set trim path start (values are given in fraction of length)
                     outline.setTrimPathEnd(1.0f);
-                    ValueAnimator valueAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
+                    ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
                     valueAnimator.setDuration(1000);
                     valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
                             // set trim end value and update view
-                            outline.setTrimPathEnd((Float) valueAnimator.getAnimatedValue());
+                            outline.setTrimPathStart((Float) valueAnimator.getAnimatedValue());
                             synchronized (obj) {
                                 if (bgOld!=null) {
                                     bgOld.update();
@@ -259,22 +302,24 @@ public class VectorDigitalClock extends FrameLayout {
                 return null;
             Log.d(TAG,"appearAnimation for "+ newNumber);
             switch (newNumber){
-                case 4: {
+                case 5:
+                case 6:
+                case 7:
+
+                case 8:
+                case 3:{
                     // find the correct path using name
-                    final PathModel outline = bgCurrent.getPathModelByName("outline1");
-                    final PathModel outline2 = bgCurrent.getPathModelByName("outline2");
+                    final PathModel outline = bgCurrent.getPathModelByName("outline");
                     // set trim path start (values are given in fraction of length)
-                    outline.setTrimPathEnd(0.0f);
-                    outline2.setTrimPathEnd(0.0f);
-                    ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
+                    outline.setTrimPathStart(1.0f);
+                    ValueAnimator valueAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
                     //valueAnimator.setStartDelay(900);
                     valueAnimator.setDuration(1000);
                     valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
                             // set trim end value and update view
-                            outline.setTrimPathEnd((Float) valueAnimator.getAnimatedValue());
-                            outline2.setTrimPathEnd((Float) valueAnimator.getAnimatedValue());
+                            outline.setTrimPathStart((Float) valueAnimator.getAnimatedValue());
                             synchronized (obj) {
                                 if (bgCurrent != null) {
                                     bgCurrent.update();
@@ -284,15 +329,53 @@ public class VectorDigitalClock extends FrameLayout {
                     });
                     return valueAnimator;
                 }
+                case 4: {
+                    // find the correct path using name
+                    final PathModel outline = bgCurrent.getPathModelByName("outline1");
+                    final PathModel outline2 = bgCurrent.getPathModelByName("outline2");
+                    // set trim path start (values are given in fraction of length)
+                    outline.setTrimPathEnd(1.0f);
+                    outline.setTrimPathStart(1.0f);
+                    ValueAnimator valueAnimator1 = ValueAnimator.ofFloat(1.0f, 0.0f);
+                    valueAnimator1.setDuration(300);
+                    valueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            // set trim end value and update view
+                            outline.setTrimPathStart((Float) valueAnimator.getAnimatedValue());
+                            synchronized (obj) {
+                                if (bgCurrent != null) {
+                                    bgCurrent.update();
+                                }
+                            }
+                        }
+                    });
+
+                    outline2.setTrimPathStart(1.0f);
+                    ValueAnimator valueAnimator2 = ValueAnimator.ofFloat(1.0f, 0.0f);
+                    valueAnimator2.setDuration(100);
+                    valueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            // set trim end value and update view
+                            outline2.setTrimPathStart((Float) valueAnimator.getAnimatedValue());
+                            synchronized (obj) {
+                                if (bgCurrent != null) {
+                                    bgCurrent.update();
+                                }
+                            }
+                        }
+                    });
+
+                    AnimatorSet four = new AnimatorSet();
+                    four.playTogether(valueAnimator1,valueAnimator2);
+                    return four;
+                }
                 case 0:
                 case 1:
                 case 2:
-                case 3:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                case 9: {
+                case 9:
+                 {
                     // find the correct path using name
                     final PathModel outline = bgCurrent.getPathModelByName("outline");
                     // set trim path start (values are given in fraction of length)

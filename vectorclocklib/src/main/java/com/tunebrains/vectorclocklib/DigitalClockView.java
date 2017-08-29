@@ -11,6 +11,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
 import java.util.ArrayList;
@@ -30,12 +31,16 @@ public class DigitalClockView extends View {
     private int scheduledUpdateMinutes = -1;
 
     public synchronized void updateTime(int hours, int minutes) {
-
         if (getMeasuredHeight() == 0) {
             scheduledUpdateHour = hours;
             scheduledUpdateMinutes = minutes;
+            //place1.number = hours/10;
+            //place2.number = hours%10;
+            //place3.number = minutes/10;
+            //place4.number = minutes%10;
             return;
         }
+
         VectorMasterDrawable p1 = null, p2, p3, p4;
         if (hours / 10 != 0) {
             p1 = vectorNumberAnimator.getNumber(hours / 10);
@@ -216,15 +221,22 @@ public class DigitalClockView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+
         if (getMeasuredHeight() == 0) {
             invalidate();
             return;
         }
 
         if (scheduledUpdateHour != -1) {
-            updateTime(scheduledUpdateHour, scheduledUpdateMinutes);
-            calcPlace();
-            scheduledUpdateHour = scheduledUpdateMinutes = -1;
+            synchronized (this) {
+                //place1.number = -1;
+                //place2.number = -1;
+                //place3.number = -1;
+                //place4.number = -1;
+                updateTime(scheduledUpdateHour, scheduledUpdateMinutes);
+                calcPlace();
+                scheduledUpdateHour = scheduledUpdateMinutes = -1;
+            }
             invalidate();
             return;
         }

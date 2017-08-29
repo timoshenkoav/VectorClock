@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
         clock.setNumberScale(50);
         //clock.setNumberWidth(getResources().getDimension(R.dimen.number_width));
         //startTime = System.currentTimeMillis();
-        startTime = new Date(2017, 10, 10, 0,0).getTime();
-        //clock.updateTime(startTime);
+        startTime = new Date(2017, 10, 10, 0,3).getTime();
+
 
     }
 
@@ -37,15 +37,15 @@ public class MainActivity extends AppCompatActivity {
         executorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                startTime += TimeUnit.MINUTES.toMillis(1);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         clock.updateTime(startTime);
+                        startTime += TimeUnit.MINUTES.toMillis(1);
                     }
                 });
             }
-        },3,3, TimeUnit.SECONDS);
+        },100,3000, TimeUnit.MILLISECONDS);
     }
 
     @Override
