@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         executorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                startTime += TimeUnit.MINUTES.toMillis(1);
+                startTime += TimeUnit.MINUTES.toMillis(15);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

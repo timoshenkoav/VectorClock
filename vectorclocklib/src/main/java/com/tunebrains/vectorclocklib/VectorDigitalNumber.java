@@ -66,13 +66,15 @@ public class VectorDigitalNumber extends View {
     }
 
     public synchronized void updateView(VectorMasterDrawable drawable, int newNumber){
-        if (newNumber == currentNumber)
+        if (newNumber == currentNumber) {
+            updateMeasure();
             return;
+        }
         int oldNumber = currentNumber;
         currentNumber = newNumber;
         bgOld = bgCurrent;
         bgCurrent = drawable;
-
+        updateMeasure();
         if (bgOld!=null) {
             if (vectorNumberAnimator == null)
                 return;
@@ -96,6 +98,7 @@ public class VectorDigitalNumber extends View {
                 public void onAnimationEnd(Animator animator) {
                     synchronized (VectorDigitalNumber.this){
                         bgOld = null;
+                        updateMeasure();
                     }
                 }
 
@@ -112,5 +115,25 @@ public class VectorDigitalNumber extends View {
             set.start();
 
         }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        //updateMeasure();
+    }
+
+    private void updateMeasure() {
+        //int maxW = 0;
+        //if (bgOld != null)
+        //    maxW = Math.max(maxW, calcWidth(bgOld));
+        //if (bgCurrent != null)
+        //    maxW = Math.max(maxW, calcWidth(bgCurrent));
+        //setMeasuredDimension(maxW, getMeasuredHeight());
+        //requestLayout();
+    }
+
+    private int calcWidth(VectorMasterDrawable bgOld) {
+        return Math.round(bgOld.getIntrinsicWidth()*(getMeasuredHeight()/(float)bgOld.getIntrinsicHeight()));
     }
 }

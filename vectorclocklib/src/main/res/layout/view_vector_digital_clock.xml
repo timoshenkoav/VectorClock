@@ -1,39 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:animateLayoutChanges="true"
     android:orientation="horizontal">
     <com.tunebrains.vectorclocklib.VectorDigitalNumber
         android:id="@+id/place_1"
-        android:layout_width="50dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="120dp"
+        android:background="#00f"
         android:layout_gravity="bottom"
         android:scaleType="fitXY"/>
     <com.tunebrains.vectorclocklib.VectorDigitalNumber
         android:id="@+id/place_2"
-        android:layout_width="50dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:background="#00f"
+        android:layout_height="120dp"
         android:layout_gravity="bottom"
         android:scaleType="fitXY"/>
-    <TextView
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
-        android:text=":"
-        android:gravity="center_vertical"/>
     <com.tunebrains.vectorclocklib.VectorDigitalNumber
         android:id="@+id/place_3"
         android:layout_width="20dp"
-        android:scaleType="fitXY"
         android:layout_height="50dp"
-        android:layout_gravity="bottom"/>
+        android:background="#00f"
+        android:layout_gravity="bottom"
+        android:scaleType="fitXY"/>
     <com.tunebrains.vectorclocklib.VectorDigitalNumber
         android:id="@+id/place_4"
         android:layout_width="20dp"
         android:layout_height="50dp"
+        android:background="#00f"
         android:layout_gravity="bottom"
         android:scaleType="fitXY"/>
 </LinearLayout>
