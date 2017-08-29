@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="148dp"
-    android:height="240dp"
-    android:viewportWidth="169"
-    android:viewportHeight="240">
+    android:width="129dp"
+    android:height="220dp"
+    android:viewportWidth="129"
+    android:viewportHeight="220">
 
+    <group android:translateX="-9" android:translateY="-10">
     <path
         android:fillType="evenOdd"
         android:name="outline"
@@ -61,4 +62,5 @@ C59.4319887,20 47.404804,24.3201312 37.6748007,32.9605233 C27.9447975,41.6009154
 122.991603,80.1317622 123.23729,78.9588557 C124.227666,74.2308152
 124.245603,71.7964678 124.341672,70.4985566 C124.437741,69.2006454
 124.484938,68.2224447 124.433562,67.3161961 Z" />
+    </group>
 </vector>
