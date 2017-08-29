@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         clock = (VectorDigitalClock) findViewById(R.id.vector_digital_clock);
         clock.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
         clock.setNumberColor(getResources().getColor(R.color.number_color));
+        clock.setNumberScale(100);
         //clock.setNumberWidth(getResources().getDimension(R.dimen.number_width));
         //startTime = System.currentTimeMillis();
         startTime = new Date(2017, 10, 10, 0,0).getTime();

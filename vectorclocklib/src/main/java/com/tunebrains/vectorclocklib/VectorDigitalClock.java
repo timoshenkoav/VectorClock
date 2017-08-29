@@ -151,6 +151,9 @@ public class VectorDigitalClock extends FrameLayout {
         this.numberWidth = numberWidth;
     }
 
+    public void setNumberScale(int percent) {
+        clockView.setNumberScale(percent);
+    }
 
     private class VectorNumberAnimator implements VectorDigitalNumber.IVectorNumberAnimator{
 

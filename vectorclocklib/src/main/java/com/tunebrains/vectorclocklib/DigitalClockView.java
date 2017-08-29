@@ -23,8 +23,9 @@ import java.util.List;
 public class DigitalClockView extends View {
 
     Paint helpPaint;
-    public static final int SMALL_NUMBER_PERCENT = 30;
+    //public static final int SMALL_NUMBER_PERCENT = 30;
     private int numberSpace;
+    private int numberScale;
 
     public synchronized void updateTime(int hours, int minutes) {
 
@@ -83,7 +84,7 @@ public class DigitalClockView extends View {
                 place3.x = (int) valueAnimator.getAnimatedValue();
             }
         });
-        left += calcWidth(place3.bgCurrent, SMALL_NUMBER_PERCENT) + numberSpace;
+        left += calcWidth(place3.bgCurrent, numberScale) + numberSpace;
         ValueAnimator x4 = ValueAnimator.ofInt(place4.x, left);
         x4.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -153,6 +154,10 @@ public class DigitalClockView extends View {
         this.numberSpace = numberSpace;
     }
 
+    public void setNumberScale(int numberScale) {
+        this.numberScale = numberScale;
+    }
+
     private class NumberHolder {
         VectorMasterDrawable bgOld;
         VectorMasterDrawable bgCurrent;
@@ -220,15 +225,15 @@ public class DigitalClockView extends View {
 
         canvas.save();
         canvas.translate(place3.x, place3.y);
-        drawNumber(canvas, place3.bgOld, SMALL_NUMBER_PERCENT);
-        drawNumber(canvas, place3.bgCurrent, SMALL_NUMBER_PERCENT);
+        drawNumber(canvas, place3.bgOld, numberScale);
+        drawNumber(canvas, place3.bgCurrent, numberScale);
         canvas.restore();
 
         canvas.save();
         canvas.translate(place4.x, place4.y);
 
-        drawNumber(canvas, place4.bgOld, SMALL_NUMBER_PERCENT);
-        drawNumber(canvas, place4.bgCurrent, SMALL_NUMBER_PERCENT);
+        drawNumber(canvas, place4.bgOld, numberScale);
+        drawNumber(canvas, place4.bgCurrent, numberScale);
 
         canvas.restore();
         invalidate();
@@ -258,7 +263,7 @@ public class DigitalClockView extends View {
         place2.x = left;
         left += calcWidth(place2.bgCurrent) + numberSpace;
         place3.x = left;
-        left += calcWidth(place3.bgCurrent, SMALL_NUMBER_PERCENT) + numberSpace;
+        left += calcWidth(place3.bgCurrent, numberScale) + numberSpace;
         place4.x = left;
     }
 
