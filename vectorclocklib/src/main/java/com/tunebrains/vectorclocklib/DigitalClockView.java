@@ -26,9 +26,16 @@ public class DigitalClockView extends View {
     //public static final int SMALL_NUMBER_PERCENT = 30;
     private int numberSpace;
     private int numberScale;
+    private int scheduledUpdateHour = -1;
+    private int scheduledUpdateMinutes = -1;
 
     public synchronized void updateTime(int hours, int minutes) {
 
+        if (getMeasuredHeight() == 0){
+            scheduledUpdateHour = hours;
+            scheduledUpdateMinutes = minutes;
+            return;
+        }
         VectorMasterDrawable p1 = null, p2, p3, p4;
         if (hours / 10 != 0) {
             p1 = vectorNumberAnimator.getNumber(hours / 10);
@@ -280,6 +287,12 @@ public class DigitalClockView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
+        if (scheduledUpdateHour!=-1){
+            updateTime(scheduledUpdateHour, scheduledUpdateMinutes);
+            calcPlace();
+            scheduledUpdateHour = scheduledUpdateMinutes = -1;
+            return;
+        }
         calcPlace();
     }
 }

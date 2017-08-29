@@ -32,24 +32,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                startTime += TimeUnit.MINUTES.toMillis(1);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        clock.updateTime(startTime);
-                    }
-                });
-            }
-        },3,3, TimeUnit.SECONDS);
+        clock.updateTime(startTime);
+        //executorService = Executors.newSingleThreadScheduledExecutor();
+        //executorService.scheduleAtFixedRate(new Runnable() {
+        //    @Override
+        //    public void run() {
+        //        startTime += TimeUnit.MINUTES.toMillis(1);
+        //        runOnUiThread(new Runnable() {
+        //            @Override
+        //            public void run() {
+        //                clock.updateTime(startTime);
+        //            }
+        //        });
+        //    }
+        //},3,3, TimeUnit.SECONDS);
     }
 
     @Override
     protected void onPause() {
-        executorService.shutdownNow();
+        //executorService.shutdownNow();
         super.onPause();
     }
 }
