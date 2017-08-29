@@ -19,8 +19,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         clock = (VectorDigitalClock) findViewById(R.id.vector_digital_clock);
-        startTime = System.currentTimeMillis();
-        //startTime = new Date(2017, 10, 10, 19,10).getTime();
+        clock.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
+        //startTime = System.currentTimeMillis();
+        startTime = new Date(2017, 10, 10, 0,0).getTime();
         //clock.updateTime(startTime);
 
     }

@@ -29,6 +29,9 @@ public class VectorDigitalClock extends FrameLayout {
     private boolean is24h;
     private Calendar calendar;
 
+    public void setNumberSpace(int numberSpace) {
+        clockView.setNumberSpace(numberSpace);
+    }
     public VectorDigitalClock(@NonNull Context context) {
         super(context);
         init();
@@ -202,6 +205,8 @@ public class VectorDigitalClock extends FrameLayout {
 
         @Override
         public Animator appearAnimation(final Object obj, final VectorMasterDrawable bgCurrent, int newNumber) {
+            if (bgCurrent == null)
+                return null;
             Log.d(TAG,"appearAnimation for "+ newNumber);
             switch (newNumber){
                 case 4: {

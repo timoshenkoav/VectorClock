@@ -13,6 +13,8 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Alexandr Timoshenko <thick.tav@gmail.com> on 8/29/17.
@@ -22,6 +24,7 @@ public class DigitalClockView extends View {
 
     Paint helpPaint;
     public static final int SMALL_NUMBER_PERCENT = 30;
+    private int numberSpace;
 
     private int valRes(int highHour) {
         switch (highHour) {
@@ -76,6 +79,12 @@ public class DigitalClockView extends View {
         }
 
         //calc new place
+        animateNewPlace();
+    }
+
+    private void animateNewPlace() {
+        if (getMeasuredHeight() == 0)
+            return;
         AnimatorSet placeAnimator = new AnimatorSet();
         int left = 0;
         ValueAnimator x1 = ValueAnimator.ofInt(place1.x, left);
@@ -85,7 +94,7 @@ public class DigitalClockView extends View {
                 place1.x = (int) valueAnimator.getAnimatedValue();
             }
         });
-        left += calcWidth(place1.bgCurrent);
+        left += calcWidth(place1.bgCurrent)+numberSpace;
         ValueAnimator x2 = ValueAnimator.ofInt(place2.x, left);
         x2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -93,7 +102,7 @@ public class DigitalClockView extends View {
                 place2.x = (int) valueAnimator.getAnimatedValue();
             }
         });
-        left += calcWidth(place2.bgCurrent);
+        left += calcWidth(place2.bgCurrent)+numberSpace;
         ValueAnimator x3 = ValueAnimator.ofInt(place3.x, left);
         x3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -101,7 +110,7 @@ public class DigitalClockView extends View {
                 place3.x = (int) valueAnimator.getAnimatedValue();
             }
         });
-        left += calcWidth(place3.bgCurrent,SMALL_NUMBER_PERCENT);
+        left += calcWidth(place3.bgCurrent, SMALL_NUMBER_PERCENT)+numberSpace;
         ValueAnimator x4 = ValueAnimator.ofInt(place4.x, left);
         x4.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -109,7 +118,7 @@ public class DigitalClockView extends View {
                 place4.x = (int) valueAnimator.getAnimatedValue();
             }
         });
-        placeAnimator.playTogether(x1,x2,x3,x4);
+        placeAnimator.playTogether(x1, x2, x3, x4);
         placeAnimator.setDuration(1000);
         placeAnimator.start();
     }
@@ -117,20 +126,27 @@ public class DigitalClockView extends View {
     private Animator updateNumber(final NumberHolder place4, int newNumber, VectorMasterDrawable p4) {
         int oldNumber = place4.number;
         place4.number = newNumber;
-        if (place4.bgCurrent == null) {
-            place4.bgCurrent = p4;
-            calcPlace();
-        } else {
+        //if (place4.bgCurrent == null) {
+        //    place4.bgCurrent = p4;
+        //    calcPlace();
+        //} else {
             place4.bgOld = place4.bgCurrent;
             place4.bgCurrent = p4;
+            List<Animator> animatorList = new ArrayList<>();
             Animator goneAnimation = vectorNumberAnimator.goneAnimation(this, place4.bgOld, oldNumber);
+            if (goneAnimation!=null) {
+                goneAnimation.setDuration(1000);
+                animatorList.add(goneAnimation);
+            }
             Animator appearAnimation = vectorNumberAnimator.appearAnimation(this, place4.bgCurrent, newNumber);
-            goneAnimation.setDuration(1000);
-            appearAnimation.setDuration(1000);
-            appearAnimation.setStartDelay(900);
+            if (appearAnimation!=null) {
+                appearAnimation.setDuration(1000);
+                appearAnimation.setStartDelay(900);
+                animatorList.add(appearAnimation);
+            }
 
             AnimatorSet set = new AnimatorSet();
-            set.playTogether(goneAnimation, appearAnimation);
+            set.playTogether(animatorList);
             set.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
@@ -156,8 +172,12 @@ public class DigitalClockView extends View {
             });
             set.start();
             return set;
-        }
-        return null;
+        //}
+        //return null;
+    }
+
+    public void setNumberSpace(int numberSpace) {
+        this.numberSpace = numberSpace;
     }
 
     private class NumberHolder {
@@ -211,8 +231,7 @@ public class DigitalClockView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (getMeasuredHeight() == 0 )
-            return;
+        if (getMeasuredHeight() == 0) { return; }
 
         canvas.save();
         canvas.translate(place1.x, place1.y);
@@ -262,11 +281,11 @@ public class DigitalClockView extends View {
     private void calcPlace() {
         int left = 0;
         place1.x = left;
-        left += calcWidth(place1.bgCurrent);
+        left += calcWidth(place1.bgCurrent) + numberSpace;
         place2.x = left;
-        left += calcWidth(place2.bgCurrent);
+        left += calcWidth(place2.bgCurrent) + numberSpace;
         place3.x = left;
-        left += calcWidth(place3.bgCurrent, SMALL_NUMBER_PERCENT);
+        left += calcWidth(place3.bgCurrent, SMALL_NUMBER_PERCENT) + numberSpace;
         place4.x = left;
     }
 
