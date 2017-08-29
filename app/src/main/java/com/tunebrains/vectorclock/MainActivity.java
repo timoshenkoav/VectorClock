@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         clock = (VectorDigitalClock) findViewById(R.id.vector_digital_clock);
         clock.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
         clock.setNumberColor(getResources().getColor(R.color.number_color));
-        clock.setNumberScale(100);
+        clock.setNumberScale(50);
         //clock.setNumberWidth(getResources().getDimension(R.dimen.number_width));
         //startTime = System.currentTimeMillis();
         startTime = new Date(2017, 10, 10, 0,0).getTime();
@@ -32,25 +32,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        clock.updateTime(startTime);
-        //executorService = Executors.newSingleThreadScheduledExecutor();
-        //executorService.scheduleAtFixedRate(new Runnable() {
-        //    @Override
-        //    public void run() {
-        //        startTime += TimeUnit.MINUTES.toMillis(1);
-        //        runOnUiThread(new Runnable() {
-        //            @Override
-        //            public void run() {
-        //                clock.updateTime(startTime);
-        //            }
-        //        });
-        //    }
-        //},3,3, TimeUnit.SECONDS);
+        //clock.updateTime(startTime);
+        executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                startTime += TimeUnit.MINUTES.toMillis(1);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        clock.updateTime(startTime);
+                    }
+                });
+            }
+        },3,3, TimeUnit.SECONDS);
     }
 
     @Override
     protected void onPause() {
-        //executorService.shutdownNow();
+        executorService.shutdownNow();
         super.onPause();
     }
 }

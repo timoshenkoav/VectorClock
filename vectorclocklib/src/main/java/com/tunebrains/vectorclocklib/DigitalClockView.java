@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
@@ -67,7 +68,7 @@ public class DigitalClockView extends View {
     private void animateNewPlace() {
         if (getMeasuredHeight() == 0) { return; }
         AnimatorSet placeAnimator = new AnimatorSet();
-        int left = 0;
+        int left = getLeftMargin();
         ValueAnimator x1 = ValueAnimator.ofInt(place1.x, left);
         x1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -264,7 +265,7 @@ public class DigitalClockView extends View {
     }
 
     private void calcPlace() {
-        int left = 0;
+        int left = getLeftMargin();
         place1.x = left;
         left += calcWidth(place1.bgCurrent) + numberSpace;
         place2.x = left;
@@ -294,5 +295,19 @@ public class DigitalClockView extends View {
             return;
         }
         calcPlace();
+    }
+
+    private int getTotalWidth(){
+
+        int left = calcWidth(place1.bgCurrent) + numberSpace;
+        left += calcWidth(place2.bgCurrent) + numberSpace;
+        left += calcWidth(place3.bgCurrent, numberScale) + numberSpace;
+        left += calcWidth(place4.bgCurrent, numberScale);
+
+        return left;
+    }
+
+    private int getLeftMargin(){
+        return (getMeasuredWidth() - getTotalWidth())/2;
     }
 }
