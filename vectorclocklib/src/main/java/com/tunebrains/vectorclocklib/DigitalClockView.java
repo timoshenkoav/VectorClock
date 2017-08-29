@@ -26,41 +26,15 @@ public class DigitalClockView extends View {
     public static final int SMALL_NUMBER_PERCENT = 30;
     private int numberSpace;
 
-    private int valRes(int highHour) {
-        switch (highHour) {
-            case 0:
-                return R.drawable.zero;
-            case 1:
-                return R.drawable.one;
-            case 2:
-                return R.drawable.two;
-            case 3:
-                return R.drawable.three;
-            case 4:
-                return R.drawable.four;
-            case 5:
-                return R.drawable.five;
-            case 6:
-                return R.drawable.six;
-            case 7:
-                return R.drawable.seven;
-            case 8:
-                return R.drawable.eight;
-            case 9:
-                return R.drawable.nine;
-        }
-        return 0;
-    }
-
     public synchronized void updateTime(int hours, int minutes) {
 
         VectorMasterDrawable p1 = null, p2, p3, p4;
         if (hours / 10 != 0) {
-            p1 = new VectorMasterDrawable(getContext(), valRes(hours / 10));
+            p1 = vectorNumberAnimator.getNumber(hours / 10);
         }
-        p2 = new VectorMasterDrawable(getContext(), valRes(hours % 10));
-        p3 = new VectorMasterDrawable(getContext(), valRes(minutes / 10));
-        p4 = new VectorMasterDrawable(getContext(), valRes(minutes % 10));
+        p2 = vectorNumberAnimator.getNumber(hours % 10);
+        p3 = vectorNumberAnimator.getNumber(minutes / 10);
+        p4 = vectorNumberAnimator.getNumber(minutes % 10);
 
         if (hours / 10 != place1.number) {
             updateNumber(place1, hours / 10, p1);
@@ -83,8 +57,7 @@ public class DigitalClockView extends View {
     }
 
     private void animateNewPlace() {
-        if (getMeasuredHeight() == 0)
-            return;
+        if (getMeasuredHeight() == 0) { return; }
         AnimatorSet placeAnimator = new AnimatorSet();
         int left = 0;
         ValueAnimator x1 = ValueAnimator.ofInt(place1.x, left);
@@ -94,7 +67,7 @@ public class DigitalClockView extends View {
                 place1.x = (int) valueAnimator.getAnimatedValue();
             }
         });
-        left += calcWidth(place1.bgCurrent)+numberSpace;
+        left += calcWidth(place1.bgCurrent) + numberSpace;
         ValueAnimator x2 = ValueAnimator.ofInt(place2.x, left);
         x2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -102,7 +75,7 @@ public class DigitalClockView extends View {
                 place2.x = (int) valueAnimator.getAnimatedValue();
             }
         });
-        left += calcWidth(place2.bgCurrent)+numberSpace;
+        left += calcWidth(place2.bgCurrent) + numberSpace;
         ValueAnimator x3 = ValueAnimator.ofInt(place3.x, left);
         x3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -110,7 +83,7 @@ public class DigitalClockView extends View {
                 place3.x = (int) valueAnimator.getAnimatedValue();
             }
         });
-        left += calcWidth(place3.bgCurrent, SMALL_NUMBER_PERCENT)+numberSpace;
+        left += calcWidth(place3.bgCurrent, SMALL_NUMBER_PERCENT) + numberSpace;
         ValueAnimator x4 = ValueAnimator.ofInt(place4.x, left);
         x4.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -130,48 +103,48 @@ public class DigitalClockView extends View {
         //    place4.bgCurrent = p4;
         //    calcPlace();
         //} else {
-            place4.bgOld = place4.bgCurrent;
-            place4.bgCurrent = p4;
-            List<Animator> animatorList = new ArrayList<>();
-            Animator goneAnimation = vectorNumberAnimator.goneAnimation(this, place4.bgOld, oldNumber);
-            if (goneAnimation!=null) {
-                goneAnimation.setDuration(1000);
-                animatorList.add(goneAnimation);
+        place4.bgOld = place4.bgCurrent;
+        place4.bgCurrent = p4;
+        List<Animator> animatorList = new ArrayList<>();
+        Animator goneAnimation = vectorNumberAnimator.goneAnimation(this, place4.bgOld, oldNumber);
+        if (goneAnimation != null) {
+            goneAnimation.setDuration(1000);
+            animatorList.add(goneAnimation);
+        }
+        Animator appearAnimation = vectorNumberAnimator.appearAnimation(this, place4.bgCurrent, newNumber);
+        if (appearAnimation != null) {
+            appearAnimation.setDuration(1000);
+            appearAnimation.setStartDelay(900);
+            animatorList.add(appearAnimation);
+        }
+
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(animatorList);
+        set.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
             }
-            Animator appearAnimation = vectorNumberAnimator.appearAnimation(this, place4.bgCurrent, newNumber);
-            if (appearAnimation!=null) {
-                appearAnimation.setDuration(1000);
-                appearAnimation.setStartDelay(900);
-                animatorList.add(appearAnimation);
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                synchronized (DigitalClockView.this) {
+                    place4.bgOld = null;
+                }
             }
 
-            AnimatorSet set = new AnimatorSet();
-            set.playTogether(animatorList);
-            set.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
+            @Override
+            public void onAnimationCancel(Animator animator) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    synchronized (DigitalClockView.this) {
-                        place4.bgOld = null;
-                    }
-                }
+            @Override
+            public void onAnimationRepeat(Animator animator) {
 
-                @Override
-                public void onAnimationCancel(Animator animator) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-
-                }
-            });
-            set.start();
-            return set;
+            }
+        });
+        set.start();
+        return set;
         //}
         //return null;
     }

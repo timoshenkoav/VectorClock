@@ -28,6 +28,8 @@ public class VectorDigitalClock extends FrameLayout {
 
     private boolean is24h;
     private Calendar calendar;
+    private int numberColor;
+    private float numberWidth = -1;
 
     public void setNumberSpace(int numberSpace) {
         clockView.setNumberSpace(numberSpace);
@@ -141,7 +143,52 @@ public class VectorDigitalClock extends FrameLayout {
         return 0;
     }
 
+    public void setNumberColor(int color) {
+        numberColor = color;
+    }
+
+    public void setNumberWidth(float numberWidth) {
+        this.numberWidth = numberWidth;
+    }
+
+
     private class VectorNumberAnimator implements VectorDigitalNumber.IVectorNumberAnimator{
+
+        @Override
+        public VectorMasterDrawable getNumber(int number) {
+            VectorMasterDrawable dr = new VectorMasterDrawable(getContext(), valRes(number));
+            switch (number){
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:{
+                    final PathModel outline = dr.getPathModelByName("outline");
+                    outline.setStrokeColor(numberColor);
+                    if (numberWidth!=-1) {
+                        outline.setStrokeWidth(numberWidth);
+                    }
+                    break;
+                }
+                case 4: {
+                    final PathModel outline = dr.getPathModelByName("outline1");
+                    final PathModel outline2 = dr.getPathModelByName("outline2");
+                    outline.setStrokeColor(numberColor);
+                    if (numberWidth!=-1) {
+                        outline.setStrokeWidth(numberWidth);
+                    }
+                    outline2.setStrokeColor(numberColor);
+                    if (numberWidth!=-1) {
+                        outline2.setStrokeWidth(numberWidth);
+                    }
+                }
+            }
+            return dr;
+        }
 
         @Override
         public Animator goneAnimation(final Object obj, final VectorMasterDrawable bgOld, int oldNumber) {

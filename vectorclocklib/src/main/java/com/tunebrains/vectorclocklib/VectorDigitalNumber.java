@@ -23,6 +23,8 @@ public class VectorDigitalNumber extends View {
         Animator goneAnimation(Object obj, VectorMasterDrawable bgOld, int oldNumber);
 
         Animator appearAnimation(Object obj, VectorMasterDrawable bgCurrent, int newNumber);
+
+        VectorMasterDrawable getNumber(int number);
     }
 
     public void setVectorNumberAnimator(IVectorNumberAnimator vectorNumberAnimator) {
