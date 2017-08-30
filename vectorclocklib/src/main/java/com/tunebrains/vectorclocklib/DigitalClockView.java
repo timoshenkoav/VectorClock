@@ -11,7 +11,6 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
 import java.util.ArrayList;
@@ -31,6 +30,10 @@ public class DigitalClockView extends View {
     private int scheduledUpdateMinutes = -1;
 
     public synchronized void updateTime(int hours, int minutes) {
+        updateTime(hours, minutes, true);
+    }
+
+    public synchronized void updateTime(int hours, int minutes, boolean animate) {
         if (getMeasuredHeight() == 0) {
             scheduledUpdateHour = hours;
             scheduledUpdateMinutes = minutes;
@@ -65,8 +68,9 @@ public class DigitalClockView extends View {
             updateNumber(place4, minutes % 10, p4);
         }
 
-        //calc new place
-        animateNewPlace();
+        if (animate) {
+            animateNewPlace();
+        }
     }
 
     private void animateNewPlace() {
@@ -127,7 +131,7 @@ public class DigitalClockView extends View {
         Animator appearAnimation = vectorNumberAnimator.appearAnimation(this, place4.bgCurrent, newNumber);
         if (appearAnimation != null) {
             appearAnimation.setDuration(vectorNumberAnimator.getDuration());
-            appearAnimation.setStartDelay(Math.round(vectorNumberAnimator.getDuration()*0.9f));
+            appearAnimation.setStartDelay(Math.round(vectorNumberAnimator.getDuration() * 0.9f));
             animatorList.add(appearAnimation);
         }
 
@@ -221,7 +225,6 @@ public class DigitalClockView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-
         if (getMeasuredHeight() == 0) {
             invalidate();
             return;
@@ -233,7 +236,7 @@ public class DigitalClockView extends View {
                 //place2.number = -1;
                 //place3.number = -1;
                 //place4.number = -1;
-                updateTime(scheduledUpdateHour, scheduledUpdateMinutes);
+                updateTime(scheduledUpdateHour, scheduledUpdateMinutes, false);
                 calcPlace();
                 scheduledUpdateHour = scheduledUpdateMinutes = -1;
             }
