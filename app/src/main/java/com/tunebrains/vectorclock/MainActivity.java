@@ -25,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
         clock.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
         clock.setNumberColor(getResources().getColor(R.color.number_color));
         clock.setNumberScale(50);
-        //clock.setNumberWidth(getResources().getDimension(R.dimen.number_width));
-        //startTime = System.currentTimeMillis();
         startTime = new Date(2017, 10, 10, 0,58).getTime();
         handler = new Handler();
 
@@ -42,24 +40,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //clock.updateTime(startTime);
-        //executorService = Executors.newSingleThreadScheduledExecutor();
-        //executorService.scheduleAtFixedRate(new Runnable() {
-        //    @Override
-        //    public void run() {
-        //        runOnUiThread(new Runnable() {
-        //            @Override
-        //            public void run() {
-        //                clock.updateTime(startTime);
-        //                startTime += TimeUnit.MINUTES.toMillis(1);
-        //            }
-        //        });
-        //    }
-        //},100,3000, TimeUnit.MILLISECONDS);
+        executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        clock.updateTime(startTime);
+                        startTime += TimeUnit.MINUTES.toMillis(1);
+                    }
+                });
+            }
+        },3000,3000, TimeUnit.MILLISECONDS);
     }
 
     @Override
     protected void onPause() {
-        //executorService.shutdownNow();
+        executorService.shutdownNow();
         super.onPause();
     }
 }

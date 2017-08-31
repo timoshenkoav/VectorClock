@@ -9,4 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:id="@+id/vector_digital_clock"></com.tunebrains.vectorclocklib.VectorDigitalClock>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:id="@+id/digital_clock_image"/>
 </LinearLayout>
