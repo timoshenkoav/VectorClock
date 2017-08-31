@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -28,12 +29,19 @@ public class DigitalClockDrawer {
     private int scheduledUpdateMinutes = -1;
     private int measuredHeight;
     private int measuredWidth;
+    private boolean is24h = true;
 
     public synchronized void updateTime(int hours, int minutes) {
         updateTime(hours, minutes, true);
     }
 
-    public synchronized void updateTime(int hours, int minutes, boolean animate) {
+    public void setIs24h(boolean is24h) {
+        this.is24h = is24h;
+    }
+
+    public synchronized void updateTime(int fullHours, int minutes, boolean animate) {
+        int hours = is24h ? fullHours : fullHours % 12;
+
         if (getMeasuredHeight() == 0) {
             scheduledUpdateHour = hours;
             scheduledUpdateMinutes = minutes;
@@ -217,6 +225,10 @@ public class DigitalClockDrawer {
         place4 = new NumberHolder();
     }
 
+    public void draw(Bitmap canvas) {
+        canvas.eraseColor(Color.TRANSPARENT);
+        draw(new Canvas(canvas));
+    }
     public void draw(Canvas canvas) {
 
         if (getMeasuredHeight() == 0) {
@@ -236,7 +248,7 @@ public class DigitalClockDrawer {
             return;
         }
 
-        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        canvas.drawColor(Color.TRANSPARENT);
         canvas.save();
         canvas.translate(place1.x, place1.y);
         drawNumber(canvas, place1.bgOld, 100);

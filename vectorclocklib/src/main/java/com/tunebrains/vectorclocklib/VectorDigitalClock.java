@@ -1,8 +1,5 @@
 package com.tunebrains.vectorclocklib;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.AttrRes;
@@ -11,11 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
-import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
-import com.sdsmdg.harjot.vectormaster.models.PathModel;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -26,9 +19,25 @@ import java.util.Date;
 public class VectorDigitalClock extends FrameLayout {
     public static final String TAG = "VectorDigitalClock";
     public static final int DEFAULT_ANIMATE_DURATION = 700;
+
+    public void updateTime(int hours, int minutes) {
+        clockView.updateTime(hours, minutes);
+    }
+
+    public void updateTime(int hours, int minutes, boolean animate) {
+        clockView.updateTime(hours, minutes, animate);
+    }
+
+    public void setVectorNumberAnimator(IVectorNumberAnimator vectorNumberAnimator) {
+        clockView.setVectorNumberAnimator(vectorNumberAnimator);
+    }
+
+    public void setIs24h(boolean is24h) {
+        clockView.setIs24h(is24h);
+    }
+
     DigitalClockView clockView;
 
-    private boolean is24h;
     private Calendar calendar;
     private int numberColor;
     private float numberWidth = -1;
@@ -48,7 +57,6 @@ public class VectorDigitalClock extends FrameLayout {
         calendar = Calendar.getInstance();
         vectorNumberAnimator = new VectorNumberAnimator(getContext());
         clockView.setVectorNumberAnimator(vectorNumberAnimator);
-        is24h = true;
         //updateTime(System.currentTimeMillis());
     }
 
@@ -78,7 +86,7 @@ public class VectorDigitalClock extends FrameLayout {
     }
 
     private void updateView() {
-        int hours = calendar.get(is24h ? Calendar.HOUR_OF_DAY : Calendar.HOUR);
+        int hours = calendar.get(Calendar.HOUR_OF_DAY);
         int minutes = calendar.get(Calendar.MINUTE);
 
         clockView.updateTime(hours, minutes);

@@ -2,6 +2,7 @@ package com.tunebrains.vectorclock;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
 
     long startTime;
-    //private VectorDigitalClock clock;
+    private VectorDigitalClock clock;
 
     Handler handler;
 
@@ -30,10 +31,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //clock = (VectorDigitalClock) findViewById(R.id.vector_digital_clock);
-        //clock.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
-        //clock.setNumberColor(getResources().getColor(R.color.number_color));
-        //clock.setNumberScale(50);
+        clock = (VectorDigitalClock) findViewById(R.id.vector_digital_clock);
+        clock.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
+        clock.setNumberColor(getResources().getColor(R.color.number_color));
+        clock.setNumberScale(50);
         startTime = new Date(2017, 10, 10, 0,58).getTime();
         handler = new Handler();
 
@@ -46,12 +47,13 @@ public class MainActivity extends AppCompatActivity {
         final Bitmap bitmap = Bitmap.createBitmap(850,400, Bitmap.Config.ARGB_8888);
         vectorNumberAnimator.setNumberColor(getResources().getColor(R.color.number_color));
         drawer.updateTime(System.currentTimeMillis());
+        drawer.setIs24h(false);
         drawer.measure(850,400);
         final ImageView im = (ImageView) findViewById(R.id.digital_clock_image);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                drawer.draw(new Canvas(bitmap));
+                drawer.draw(bitmap);
                 im.setImageBitmap(bitmap);
                 handler.postDelayed(this,1);
             }
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         drawer.updateTime(startTime);
+                        clock.updateTime(startTime);
                         startTime += TimeUnit.MINUTES.toMillis(1);
                     }
                 });
