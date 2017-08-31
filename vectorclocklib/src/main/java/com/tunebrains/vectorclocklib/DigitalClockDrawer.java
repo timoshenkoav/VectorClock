@@ -5,10 +5,13 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -175,6 +178,15 @@ public class DigitalClockDrawer {
         return measuredHeight;
     }
 
+    public void updateTime(long l) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(l);
+        int hours = calendar.get(Calendar.HOUR_OF_DAY);
+        int minutes = calendar.get(Calendar.MINUTE);
+
+        updateTime(hours, minutes);
+    }
+
     private class NumberHolder {
         VectorMasterDrawable bgOld;
         VectorMasterDrawable bgCurrent;
@@ -224,6 +236,7 @@ public class DigitalClockDrawer {
             return;
         }
 
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         canvas.save();
         canvas.translate(place1.x, place1.y);
         drawNumber(canvas, place1.bgOld, 100);

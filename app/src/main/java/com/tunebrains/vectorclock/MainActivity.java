@@ -1,9 +1,14 @@
 package com.tunebrains.vectorclock;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
+import com.tunebrains.vectorclocklib.DigitalClockDrawer;
 import com.tunebrains.vectorclocklib.VectorDigitalClock;
+import com.tunebrains.vectorclocklib.VectorNumberAnimator;
 import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,33 +17,57 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
 
     long startTime;
-    private VectorDigitalClock clock;
+    //private VectorDigitalClock clock;
 
     Handler handler;
 
     ScheduledExecutorService executorService;
+
+    DigitalClockDrawer drawer;
+    private VectorNumberAnimator vectorNumberAnimator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        clock = (VectorDigitalClock) findViewById(R.id.vector_digital_clock);
-        clock.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
-        clock.setNumberColor(getResources().getColor(R.color.number_color));
-        clock.setNumberScale(50);
+        //clock = (VectorDigitalClock) findViewById(R.id.vector_digital_clock);
+        //clock.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
+        //clock.setNumberColor(getResources().getColor(R.color.number_color));
+        //clock.setNumberScale(50);
         startTime = new Date(2017, 10, 10, 0,58).getTime();
         handler = new Handler();
+
+        drawer = new DigitalClockDrawer(this);
+        vectorNumberAnimator = new VectorNumberAnimator(this);
+        drawer.setVectorNumberAnimator(vectorNumberAnimator);
+        drawer.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
+        drawer.setNumberScale(50);
+
+        final Bitmap bitmap = Bitmap.createBitmap(850,400, Bitmap.Config.ARGB_8888);
+        vectorNumberAnimator.setNumberColor(getResources().getColor(R.color.number_color));
+        drawer.updateTime(System.currentTimeMillis());
+        drawer.measure(850,400);
+        final ImageView im = (ImageView) findViewById(R.id.digital_clock_image);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                drawer.draw(new Canvas(bitmap));
+                im.setImageBitmap(bitmap);
+                handler.postDelayed(this,1);
+            }
+        },1);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                clock.updateTime(startTime);
-            }
-        });
+        //handler.post(new Runnable() {
+        //    @Override
+        //    public void run() {
+        //        clock.updateTime(startTime);
+        //    }
+        //});
         //clock.updateTime(startTime);
         executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.scheduleAtFixedRate(new Runnable() {
@@ -47,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        clock.updateTime(startTime);
+                        drawer.updateTime(startTime);
                         startTime += TimeUnit.MINUTES.toMillis(1);
                     }
                 });
