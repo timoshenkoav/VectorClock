@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
         clock.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
         clock.setNumberColor(getResources().getColor(R.color.number_color));
         clock.setNumberScale(50);
-        startTime = new Date(2017, 10, 10, 0,58).getTime();
+        clock.setIs24h(false);
+        startTime = System.currentTimeMillis();
         handler = new Handler();
 
         drawer = new DigitalClockDrawer(this);
@@ -47,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         final Bitmap bitmap = Bitmap.createBitmap(850,400, Bitmap.Config.ARGB_8888);
         vectorNumberAnimator.setNumberColor(getResources().getColor(R.color.number_color));
         drawer.updateTime(System.currentTimeMillis());
-        drawer.setIs24h(false);
         drawer.measure(850,400);
         final ImageView im = (ImageView) findViewById(R.id.digital_clock_image);
         handler.postDelayed(new Runnable() {
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 handler.postDelayed(this,1);
             }
         },1);
+        clock.updateTime(startTime);
 
     }
 
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        clock.setIs24h(true);
                         drawer.updateTime(startTime);
                         clock.updateTime(startTime);
                         startTime += TimeUnit.MINUTES.toMillis(1);

@@ -88,6 +88,7 @@ public class VectorNumberAnimator implements IVectorNumberAnimator {
 
     @Override
     public Animator goneAnimation(final Object obj, final VectorMasterDrawable bgOld, int oldNumber) {
+        if (bgOld == null) { return null; }
         switch (oldNumber) {
             case 5:
             case 6:
