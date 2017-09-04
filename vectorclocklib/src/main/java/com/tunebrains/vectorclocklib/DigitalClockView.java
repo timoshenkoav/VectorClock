@@ -74,6 +74,14 @@ public class DigitalClockView extends View {
         drawer.setVectorNumberAnimator(vectorNumberAnimator);
     }
 
+    public void setAnimated(boolean animated) {
+        drawer.setAnimated(animated);
+    }
+
+    public void setGravity(int gravity) {
+        drawer.setGravity(gravity);
+    }
+
     public void setIs24h(boolean is24h) {
         drawer.setIs24h(is24h);
     }

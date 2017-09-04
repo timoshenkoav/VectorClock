@@ -144,5 +144,11 @@ public class VectorDigitalClock extends FrameLayout {
         clockView.setNumberScale(percent);
     }
 
+    public void setAnimated(boolean animated) {
+        clockView.setAnimated(animated);
+    }
 
+    public void setGravity(int gravity) {
+        clockView.setGravity(gravity);
+    }
 }

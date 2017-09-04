@@ -8,8 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.view.Gravity;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,6 +30,8 @@ public class DigitalClockDrawer {
     private int measuredHeight;
     private int measuredWidth;
     private boolean is24h = true;
+    private boolean animated = true;
+    private int gravity = Gravity.CENTER;
 
     public synchronized void updateTime(int hours, int minutes) {
         updateTime(hours, minutes, true);
@@ -76,9 +78,10 @@ public class DigitalClockDrawer {
             updateNumber(place4, minutes % 10, p4);
         }
 
-        if (animate) {
+        if (animate && animated) {
             animateNewPlace();
         }
+        if (!animated) { calcPlace(); }
     }
 
     private void animateNewPlace() {
@@ -122,54 +125,60 @@ public class DigitalClockDrawer {
     }
 
     private Animator updateNumber(final NumberHolder place4, int newNumber, VectorMasterDrawable p4) {
-        int oldNumber = place4.number;
-        place4.number = newNumber;
-        //if (place4.bgCurrent == null) {
-        //    place4.bgCurrent = p4;
-        //    calcPlace();
-        //} else {
-        place4.bgOld = place4.bgCurrent;
-        place4.bgCurrent = p4;
-        List<Animator> animatorList = new ArrayList<>();
-        Animator goneAnimation = vectorNumberAnimator.goneAnimation(this, place4.bgOld, oldNumber);
-        if (goneAnimation != null) {
-            goneAnimation.setDuration(vectorNumberAnimator.getDuration());
-            animatorList.add(goneAnimation);
-        }
-        Animator appearAnimation = vectorNumberAnimator.appearAnimation(this, place4.bgCurrent, newNumber);
-        if (appearAnimation != null) {
-            appearAnimation.setDuration(vectorNumberAnimator.getDuration());
-            appearAnimation.setStartDelay(Math.round(vectorNumberAnimator.getDuration() * 0.9f));
-            animatorList.add(appearAnimation);
-        }
+        if (animated) {
 
-        AnimatorSet set = new AnimatorSet();
-        set.playTogether(animatorList);
-        set.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-
+            int oldNumber = place4.number;
+            place4.number = newNumber;
+            //if (place4.bgCurrent == null) {
+            //    place4.bgCurrent = p4;
+            //    calcPlace();
+            //} else {
+            place4.bgOld = place4.bgCurrent;
+            place4.bgCurrent = p4;
+            List<Animator> animatorList = new ArrayList<>();
+            Animator goneAnimation = vectorNumberAnimator.goneAnimation(this, place4.bgOld, oldNumber);
+            if (goneAnimation != null) {
+                goneAnimation.setDuration(vectorNumberAnimator.getDuration());
+                animatorList.add(goneAnimation);
+            }
+            Animator appearAnimation = vectorNumberAnimator.appearAnimation(this, place4.bgCurrent, newNumber);
+            if (appearAnimation != null) {
+                appearAnimation.setDuration(vectorNumberAnimator.getDuration());
+                appearAnimation.setStartDelay(Math.round(vectorNumberAnimator.getDuration() * 0.9f));
+                animatorList.add(appearAnimation);
             }
 
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                synchronized (DigitalClockDrawer.this) {
-                    place4.bgOld = null;
+            AnimatorSet set = new AnimatorSet();
+            set.playTogether(animatorList);
+            set.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
                 }
-            }
 
-            @Override
-            public void onAnimationCancel(Animator animator) {
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    synchronized (DigitalClockDrawer.this) {
+                        place4.bgOld = null;
+                    }
+                }
 
-            }
+                @Override
+                public void onAnimationCancel(Animator animator) {
 
-            @Override
-            public void onAnimationRepeat(Animator animator) {
+                }
 
-            }
-        });
-        set.start();
-        return set;
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+            set.start();
+            return set;
+        } else {
+            place4.bgOld = null;
+            return null;
+        }
         //}
         //return null;
     }
@@ -193,6 +202,14 @@ public class DigitalClockDrawer {
         int minutes = calendar.get(Calendar.MINUTE);
 
         updateTime(hours, minutes);
+    }
+
+    public void setAnimated(boolean animated) {
+        this.animated = animated;
+    }
+
+    public void setGravity(int gravity) {
+        this.gravity = gravity;
     }
 
     private class NumberHolder {
@@ -229,12 +246,12 @@ public class DigitalClockDrawer {
         canvas.eraseColor(Color.TRANSPARENT);
         draw(new Canvas(canvas));
     }
+
     public void draw(Canvas canvas) {
 
         if (getMeasuredHeight() == 0) {
             return;
         }
-
         if (scheduledUpdateHour != -1) {
             synchronized (this) {
                 //place1.number = -1;
@@ -324,7 +341,14 @@ public class DigitalClockDrawer {
     }
 
     private int getLeftMargin() {
-        return (getMeasuredWidth() - getTotalWidth()) / 2;
+        switch (gravity) {
+            case Gravity.LEFT:
+                return 0;
+            case Gravity.RIGHT:
+                return getMeasuredWidth() - getTotalWidth();
+            default:
+                return (getMeasuredWidth() - getTotalWidth()) / 2;
+        }
     }
 
     private int getMeasuredWidth() {

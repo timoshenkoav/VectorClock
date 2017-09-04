@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.widget.ImageView;
 import com.tunebrains.vectorclocklib.DigitalClockDrawer;
 import com.tunebrains.vectorclocklib.VectorDigitalClock;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         clock.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
         clock.setNumberColor(getResources().getColor(R.color.number_color));
         clock.setNumberScale(50);
+        clock.setGravity(Gravity.LEFT);
         clock.setIs24h(false);
         startTime = System.currentTimeMillis();
         handler = new Handler();
@@ -47,17 +49,18 @@ public class MainActivity extends AppCompatActivity {
 
         final Bitmap bitmap = Bitmap.createBitmap(850,400, Bitmap.Config.ARGB_8888);
         vectorNumberAnimator.setNumberColor(getResources().getColor(R.color.number_color));
+        drawer.setGravity(Gravity.RIGHT);
         drawer.updateTime(System.currentTimeMillis());
         drawer.measure(850,400);
         final ImageView im = (ImageView) findViewById(R.id.digital_clock_image);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                drawer.draw(bitmap);
-                im.setImageBitmap(bitmap);
-                handler.postDelayed(this,1);
-            }
-        },1);
+        //handler.postDelayed(new Runnable() {
+        //    @Override
+        //    public void run() {
+        //        drawer.draw(bitmap);
+        //        im.setImageBitmap(bitmap);
+        //        handler.postDelayed(this,1);
+        //    }
+        //},1);
         clock.updateTime(startTime);
 
     }

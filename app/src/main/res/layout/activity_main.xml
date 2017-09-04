@@ -7,10 +7,10 @@
 
     <com.tunebrains.vectorclocklib.VectorDigitalClock
         android:id="@+id/vector_digital_clock"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="80dp"></com.tunebrains.vectorclocklib.VectorDigitalClock>
     <ImageView
         android:id="@+id/digital_clock_image"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="80dp"/>
 </LinearLayout>
