@@ -129,10 +129,6 @@ public class DigitalClockDrawer {
 
             int oldNumber = place4.number;
             place4.number = newNumber;
-            //if (place4.bgCurrent == null) {
-            //    place4.bgCurrent = p4;
-            //    calcPlace();
-            //} else {
             place4.bgOld = place4.bgCurrent;
             place4.bgCurrent = p4;
             List<Animator> animatorList = new ArrayList<>();
@@ -176,7 +172,9 @@ public class DigitalClockDrawer {
             set.start();
             return set;
         } else {
+            place4.number = newNumber;
             place4.bgOld = null;
+            place4.bgCurrent = p4;
             return null;
         }
         //}

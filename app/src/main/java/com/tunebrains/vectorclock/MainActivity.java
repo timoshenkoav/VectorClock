@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         clock.setNumberScale(50);
         clock.setGravity(Gravity.LEFT);
         clock.setIs24h(false);
+        clock.setAnimated(false);
         startTime = System.currentTimeMillis();
         handler = new Handler();
 
@@ -50,8 +51,9 @@ public class MainActivity extends AppCompatActivity {
         final Bitmap bitmap = Bitmap.createBitmap(850,400, Bitmap.Config.ARGB_8888);
         vectorNumberAnimator.setNumberColor(getResources().getColor(R.color.number_color));
         drawer.setGravity(Gravity.RIGHT);
-        drawer.updateTime(System.currentTimeMillis());
-        drawer.measure(850,400);
+
+        //drawer.updateTime(System.currentTimeMillis());
+        //drawer.measure(850,400);
         final ImageView im = (ImageView) findViewById(R.id.digital_clock_image);
         //handler.postDelayed(new Runnable() {
         //    @Override
