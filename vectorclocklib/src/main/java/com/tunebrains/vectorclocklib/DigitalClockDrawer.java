@@ -32,18 +32,19 @@ public class DigitalClockDrawer {
     private boolean is24h = true;
     private boolean animated = true;
     private int gravity = Gravity.CENTER;
+    private int minutes;
+    private int fullHours;
 
-    public synchronized void updateTime(int hours, int minutes) {
-        updateTime(hours, minutes, true);
+    public synchronized boolean updateTime(int hours, int minutes) {
+        return updateTime(hours, minutes, true);
     }
 
     public void setIs24h(boolean is24h) {
         this.is24h = is24h;
     }
 
-    public synchronized void updateTime(int fullHours, int minutes, boolean animate) {
+    public synchronized boolean updateTime(int fullHours, int minutes, boolean animate) {
         int hours = is24h ? fullHours : fullHours % 12;
-
         if (getMeasuredHeight() == 0) {
             scheduledUpdateHour = hours;
             scheduledUpdateMinutes = minutes;
@@ -51,8 +52,12 @@ public class DigitalClockDrawer {
             //place2.number = hours%10;
             //place3.number = minutes/10;
             //place4.number = minutes%10;
-            return;
+            return true;
         }
+        if (this.fullHours == fullHours && this.minutes == minutes)
+            return false;
+        this.fullHours = fullHours;
+        this.minutes = minutes;
 
         VectorMasterDrawable p1 = null, p2, p3, p4;
         if (hours / 10 != 0) {
@@ -82,6 +87,7 @@ public class DigitalClockDrawer {
             animateNewPlace();
         }
         if (!animated) { calcPlace(); }
+        return true;
     }
 
     private void animateNewPlace() {
@@ -193,13 +199,13 @@ public class DigitalClockDrawer {
         return measuredHeight;
     }
 
-    public void updateTime(long l) {
+    public boolean updateTime(long l) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(l);
         int hours = calendar.get(Calendar.HOUR_OF_DAY);
         int minutes = calendar.get(Calendar.MINUTE);
 
-        updateTime(hours, minutes);
+        return updateTime(hours, minutes);
     }
 
     public void setAnimated(boolean animated) {
