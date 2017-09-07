@@ -210,6 +210,11 @@ public class DigitalClockDrawer {
         this.gravity = gravity;
     }
 
+    public void updateSize(int clockWidth, int clockHeight) {
+        measure(clockWidth,clockHeight);
+        animateNewPlace();
+    }
+
     private class NumberHolder {
         VectorMasterDrawable bgOld;
         VectorMasterDrawable bgCurrent;
@@ -356,5 +361,6 @@ public class DigitalClockDrawer {
     public void measure(int width, int height) {
         measuredWidth = width;
         measuredHeight = height;
+
     }
 }
