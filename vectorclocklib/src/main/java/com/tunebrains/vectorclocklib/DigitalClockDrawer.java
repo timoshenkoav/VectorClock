@@ -212,7 +212,7 @@ public class DigitalClockDrawer {
 
     public void updateSize(int clockWidth, int clockHeight) {
         measure(clockWidth,clockHeight);
-        animateNewPlace();
+        calcPlace();
     }
 
     private class NumberHolder {
@@ -328,9 +328,12 @@ public class DigitalClockDrawer {
         return calcWidth(drawable, 100);
     }
 
-    private int calcWidth(VectorMasterDrawable drawable, int perc) {
+    private int calcWidth(VectorMasterDrawable drawable,int perc) {
+        return calcWidth(drawable, getMeasuredHeight(),perc);
+    }
+    private int calcWidth(VectorMasterDrawable drawable,int height, int perc) {
         if (drawable == null) { return 0; }
-        return Math.round(drawable.getIntrinsicWidth() * ((getMeasuredHeight() * perc / 100) / (float) drawable.getIntrinsicHeight()));
+        return Math.round(drawable.getIntrinsicWidth() * ((height * perc / 100) / (float) drawable.getIntrinsicHeight()));
     }
 
     private int getTotalWidth() {
@@ -361,6 +364,14 @@ public class DigitalClockDrawer {
     public void measure(int width, int height) {
         measuredWidth = width;
         measuredHeight = height;
+    }
 
+    public int getMinWidth(int height){
+        int width = 0;
+        width += calcWidth(place1.bgCurrent,height,100) + numberSpace;
+        width += calcWidth(place2.bgCurrent,height,100) + numberSpace;
+        width += calcWidth(place3.bgCurrent,height,numberScale) + numberSpace;
+        width += calcWidth(place4.bgCurrent,height,numberScale) + numberSpace;
+        return width;
     }
 }
