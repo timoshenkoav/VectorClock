@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import com.tunebrains.vectorclocklib.DigitalClockDrawer;
 import com.tunebrains.vectorclocklib.VectorDigitalClock;
 import com.tunebrains.vectorclocklib.VectorNumberAnimator;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         clock.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
         clock.setNumberColor(getResources().getColor(R.color.number_color));
         clock.setNumberScale(50);
-        clock.setGravity(Gravity.LEFT);
+        clock.setGravity(Gravity.LEFT|Gravity.BOTTOM);
         clock.setIs24h(false);
         clock.setAnimated(false);
         startTime = System.currentTimeMillis();
@@ -52,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
         drawer.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
         drawer.setNumberScale(50);
 
-        bitmap = Bitmap.createBitmap(850,400, Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap(1024,1024, Bitmap.Config.ARGB_8888);
 
         vectorNumberAnimator.setNumberColor(getResources().getColor(R.color.number_color));
-        drawer.setGravity(Gravity.CENTER);
+        drawer.setGravity(Gravity.RIGHT|Gravity.BOTTOM);
 
         drawer.updateTime(System.currentTimeMillis());
 
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 synchronized (MainActivity.this) {
                     clockWidth += 10;
                     clockHeight += 10;
-                    bitmap = Bitmap.createBitmap(clockWidth,clockHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(1024,1024, Bitmap.Config.ARGB_8888);
                     drawer.updateSize(clockWidth, clockHeight);
                 }
             }

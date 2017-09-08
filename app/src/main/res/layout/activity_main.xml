@@ -11,6 +11,7 @@
         android:layout_height="80dp"></com.tunebrains.vectorclocklib.VectorDigitalClock>
     <ImageView
         android:id="@+id/digital_clock_image"
+        android:background="#f00"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <Button
