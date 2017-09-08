@@ -291,7 +291,7 @@ public class DigitalClockDrawer {
             canvas.translate(0, canvas.getHeight() - getMeasuredHeight());
         }
         if (majorGravity == Gravity.CENTER_VERTICAL) {
-            canvas.translate(0, (canvas.getHeight() - getMeasuredHeight())/2);
+            canvas.translate(0, (canvas.getHeight() - getMeasuredHeight()) / 2);
         }
         canvas.save();
         canvas.translate(place1.x, place1.y);
@@ -347,7 +347,6 @@ public class DigitalClockDrawer {
         place3.x = left;
         left += calcWidth(place3.bgCurrent, numberScale) + numberSpace;
         place4.x = left;
-
     }
 
     private int calcWidth(VectorMasterDrawable drawable) {
@@ -395,8 +394,9 @@ public class DigitalClockDrawer {
     }
 
     public int getMinWidth(int height) {
-        int currentNumberWidth = Math.round(height*maxNumberWidth/100.f);
-        int width = currentNumberWidth * 4 + numberSpace * 3;
+        int currentNumberWidth = Math.round(height * maxNumberWidth / 100.f);
+        int smallNumberWidth = Math.round((height * numberScale/100) * maxNumberWidth / 100.f);
+        int width = currentNumberWidth * 2 + (smallNumberWidth * 2) + numberSpace * 3;
         //width += calcWidth(place1.bgCurrent,height,100) + numberSpace;
         //width += calcWidth(place2.bgCurrent,height,100) + numberSpace;
         //width += calcWidth(place3.bgCurrent,height,numberScale) + numberSpace;
