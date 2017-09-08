@@ -35,6 +35,8 @@ public class DigitalClockDrawer {
     private int minutes;
     private int fullHours;
 
+    private int maxNumberWidth;
+
     public synchronized boolean updateTime(int hours, int minutes) {
         return updateTime(hours, minutes, true);
     }
@@ -234,6 +236,16 @@ public class DigitalClockDrawer {
 
     public void setVectorNumberAnimator(IVectorNumberAnimator vectorNumberAnimator) {
         this.vectorNumberAnimator = vectorNumberAnimator;
+        calcMinNumberWidth(100);
+    }
+
+    private void calcMinNumberWidth(int height) {
+        maxNumberWidth = 0;
+        for (int i=0;i<10;++i){
+            VectorMasterDrawable drawable = vectorNumberAnimator.getNumber(i);
+            int nWidth = calcWidth(drawable,height,100);
+            maxNumberWidth = Math.max(nWidth,nWidth);
+        }
     }
 
     IVectorNumberAnimator vectorNumberAnimator;
@@ -249,6 +261,7 @@ public class DigitalClockDrawer {
         place2 = new NumberHolder();
         place3 = new NumberHolder();
         place4 = new NumberHolder();
+
     }
 
     public void draw(Bitmap canvas) {
@@ -373,11 +386,12 @@ public class DigitalClockDrawer {
     }
 
     public int getMinWidth(int height){
-        int width = 0;
-        width += calcWidth(place1.bgCurrent,height,100) + numberSpace;
-        width += calcWidth(place2.bgCurrent,height,100) + numberSpace;
-        width += calcWidth(place3.bgCurrent,height,numberScale) + numberSpace;
-        width += calcWidth(place4.bgCurrent,height,numberScale) + numberSpace;
+        calcMinNumberWidth(height);
+        int width = maxNumberWidth*4+numberSpace*3;
+        //width += calcWidth(place1.bgCurrent,height,100) + numberSpace;
+        //width += calcWidth(place2.bgCurrent,height,100) + numberSpace;
+        //width += calcWidth(place3.bgCurrent,height,numberScale) + numberSpace;
+        //width += calcWidth(place4.bgCurrent,height,numberScale) + numberSpace;
         return width;
     }
 }
