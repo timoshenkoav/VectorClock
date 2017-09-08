@@ -395,8 +395,8 @@ public class DigitalClockDrawer {
     }
 
     public int getMinWidth(int height) {
-        calcMinNumberWidth(height);
-        int width = maxNumberWidth * 4 + numberSpace * 3;
+        int currentNumberWidth = Math.round(height*maxNumberWidth/100.f);
+        int width = currentNumberWidth * 4 + numberSpace * 3;
         //width += calcWidth(place1.bgCurrent,height,100) + numberSpace;
         //width += calcWidth(place2.bgCurrent,height,100) + numberSpace;
         //width += calcWidth(place3.bgCurrent,height,numberScale) + numberSpace;
