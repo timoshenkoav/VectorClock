@@ -14,7 +14,7 @@ import android.view.View;
 
 public class DigitalClockView extends View {
 
-    private DigitalClockDrawer drawer;
+    private IClockDrawer drawer;
 
     public DigitalClockView(Context context) {
         super(context);

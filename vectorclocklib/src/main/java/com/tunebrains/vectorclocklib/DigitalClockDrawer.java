@@ -19,7 +19,7 @@ import java.util.List;
  * Created by Alexandr Timoshenko <thick.tav@gmail.com> on 8/29/17.
  */
 
-public class DigitalClockDrawer {
+public class DigitalClockDrawer implements IClockDrawer {
 
     Paint helpPaint;
     //public static final int SMALL_NUMBER_PERCENT = 30;
@@ -36,14 +36,17 @@ public class DigitalClockDrawer {
     private int fullHours;
     private int maxNumberWidth;
 
+    @Override
     public synchronized boolean updateTime(int hours, int minutes) {
         return updateTime(hours, minutes, true);
     }
 
+    @Override
     public void setIs24h(boolean is24h) {
         this.is24h = is24h;
     }
 
+    @Override
     public synchronized boolean updateTime(int fullHours, int minutes, boolean animate) {
         int hours = is24h ? fullHours : fullHours % 12;
         if (getMeasuredHeight() == 0) {
@@ -187,10 +190,12 @@ public class DigitalClockDrawer {
         //return null;
     }
 
+    @Override
     public void setNumberSpace(int numberSpace) {
         this.numberSpace = numberSpace;
     }
 
+    @Override
     public void setNumberScale(int numberScale) {
         this.numberScale = numberScale;
     }
@@ -199,6 +204,7 @@ public class DigitalClockDrawer {
         return measuredHeight;
     }
 
+    @Override
     public boolean updateTime(long l) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(l);
@@ -208,14 +214,17 @@ public class DigitalClockDrawer {
         return updateTime(hours, minutes);
     }
 
+    @Override
     public void setAnimated(boolean animated) {
         this.animated = animated;
     }
 
+    @Override
     public void setGravity(int gravity) {
         this.gravity = gravity;
     }
 
+    @Override
     public void updateSize(int clockWidth, int clockHeight) {
         measure(clockWidth, clockHeight);
         calcPlaceY();
@@ -232,6 +241,7 @@ public class DigitalClockDrawer {
     NumberHolder place1, place2, place3, place4;
     boolean initialSet;
 
+    @Override
     public void setVectorNumberAnimator(IVectorNumberAnimator vectorNumberAnimator) {
         this.vectorNumberAnimator = vectorNumberAnimator;
         calcMinNumberWidth(100);
@@ -261,11 +271,13 @@ public class DigitalClockDrawer {
         place4 = new NumberHolder();
     }
 
+    @Override
     public void draw(Bitmap canvas) {
         canvas.eraseColor(Color.TRANSPARENT);
         draw(new Canvas(canvas));
     }
 
+    @Override
     public void draw(Canvas canvas) {
 
         if (getMeasuredHeight() == 0) {
@@ -388,11 +400,13 @@ public class DigitalClockDrawer {
         return measuredWidth;
     }
 
+    @Override
     public void measure(int width, int height) {
         measuredWidth = width;
         measuredHeight = height;
     }
 
+    @Override
     public int getMinWidth(int height) {
         int currentNumberWidth = Math.round(height * maxNumberWidth / 100.f);
         int smallNumberWidth = Math.round((height * numberScale/100) * maxNumberWidth / 100.f);
