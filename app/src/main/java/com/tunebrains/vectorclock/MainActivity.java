@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import com.tunebrains.vectorclocklib.BitmapDigitalClock;
 import com.tunebrains.vectorclocklib.IClockDrawer;
 import com.tunebrains.vectorclocklib.VectorNumberAnimator;
 import com.tunebrains.vectorclocklib.bitmap.BitmapClockDrawer;
@@ -64,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 handler.postDelayed(this, 1);
             }
         }, 1);
+        final BitmapDigitalClock bitmapDigitalClock = (BitmapDigitalClock) findViewById(R.id.bitmap_digital_clock);
+        bitmapDigitalClock.updateTime(System.currentTimeMillis());
         findViewById(R.id.size_increase).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,9 +77,13 @@ public class MainActivity extends AppCompatActivity {
                     //drawer.updateSize(clockWidth, clockHeight);
                     startTime += TimeUnit.MINUTES.toMillis(1);
                     drawer.updateTime(startTime);
+                    bitmapDigitalClock.updateTime(startTime);
                 }
             }
         });
+
+
+
     }
 
     @Override

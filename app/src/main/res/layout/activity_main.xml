@@ -6,12 +6,16 @@
     android:orientation="vertical">
     <ImageView
         android:id="@+id/digital_clock_image"
-        android:background="#0f0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+ 1h"
-        android:id="@+id/size_increase"/>
+        android:background="#0f0"/>
+    <com.tunebrains.vectorclocklib.BitmapDigitalClock
+        android:layout_width="match_parent"
+        android:id="@+id/bitmap_digital_clock"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/size_increase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+ 1h"/>
 </LinearLayout>
