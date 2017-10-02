@@ -21,9 +21,16 @@ public class BitmapLoader {
         return number;
     }
 
+    public BitmapNumber createNumberMinutes(int i) {
+        BitmapNumber number = new BitmapNumber(i);
+        number.minutes = true;
+        return number;
+    }
+
     public class BitmapNumber {
         int number;
         private List<Drawable> bitmaps;
+        public boolean minutes;
 
         public BitmapNumber(int i) {
             number = i;
@@ -41,8 +48,17 @@ public class BitmapLoader {
         }
 
         private Drawable loadFrame(int number, int currentFrame) {
+            if (minutes){
+                return getDrawableMinutes(number, currentFrame);
+            }
             return getDrawable(number, currentFrame);
         }
+    }
+
+    private Drawable getDrawableMinutes(int number, int currentFrame) {
+        String resid = String.format("m0%d_%05d", number, currentFrame);
+        int id = context.getResources().getIdentifier(resid, "drawable", context.getPackageName());
+        return context.getResources().getDrawable(id);
     }
 
     private HashMap<Integer, BitmapNumber> cacheNumbers;

@@ -3,7 +3,6 @@ package com.tunebrains.vectorclocklib.bitmap;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,6 +13,7 @@ import android.util.DisplayMetrics;
 import android.view.animation.LinearInterpolator;
 import com.tunebrains.vectorclocklib.IClockDrawer;
 import com.tunebrains.vectorclocklib.IVectorNumberAnimator;
+import com.tunebrains.vectorclocklib.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -37,6 +37,7 @@ public class BitmapClockDrawer implements IClockDrawer {
     private int hours;
 
     private Context context;
+
     public int getMeasuredHeight() {
         return measuredHeight;
     }
@@ -60,14 +61,18 @@ public class BitmapClockDrawer implements IClockDrawer {
 
     NumberHolder place1, place2;
 
+    NumberHolder place3, place4;
+
     public BitmapClockDrawer(Context context) {
-        this.context  = context;
+        this.context = context;
         bitmapLoader = new BitmapLoader(context);
 
         helpPaint = new Paint();
         helpPaint.setStyle(Paint.Style.FILL);
         place1 = new NumberHolder();
         place2 = new NumberHolder();
+        place3 = new NumberHolder();
+        place4 = new NumberHolder();
     }
 
     @Override
@@ -86,30 +91,47 @@ public class BitmapClockDrawer implements IClockDrawer {
         if (getMeasuredHeight() == 0) {
             throw new RuntimeException("call measure before");
         }
+
         if (this.fullHours == fullHours && this.minutes == minutes) { return false; }
         this.fullHours = fullHours;
         this.minutes = minutes;
 
-        BitmapLoader.BitmapNumber p1 = null, p2;
+        BitmapLoader.BitmapNumber p1 = null, p2, p3, p4;
         if (hours / 10 != 0) {
             p1 = getNumber(hours / 10);
         }
         p2 = getNumber(hours % 10);
+        p3 = getNumberMinutes(minutes / 10);
+        p4 = getNumberMinutes(minutes % 10);
 
         AnimatorSet hoursSet = new AnimatorSet();
         List<Animator> hoursAnims = new ArrayList<>();
-        List<HoursPositioning.Position> hoursPosition = HoursPositioning.positions.get(hours);
+        List<HoursPositioning.Position> hoursPosition = HoursPositioning.hoursPositions.get(hours);
+        List<HoursPositioning.Position> minutesPosition = HoursPositioning.minutesPositions.get(minutes);
+        HoursPositioning.Position minutesOffset = HoursPositioning.minutesOffset.get(hours);
 
         if (hours / 10 != place1.number) {
             hoursAnims.add(updateNumber(place1, hours / 10, p1));
             float newX = getX(hoursPosition.get(0));
-            hoursAnims.add(placeAnimation(place1,newX));
+            hoursAnims.add(placeAnimation(place1, newX));
         }
 
         if (hours % 10 != place2.number) {
             hoursAnims.add(updateNumber(place2, hours % 10, p2));
             float newX = getX(hoursPosition.get(1));
-            hoursAnims.add(placeAnimation(place2,newX));
+            hoursAnims.add(placeAnimation(place2, newX));
+        }
+
+        if (minutes / 10 != place3.number) {
+            hoursAnims.add(updateNumber(place3, minutes / 10, p3));
+            float newX = getX(minutesOffset, minutesPosition.get(0));
+            hoursAnims.add(placeAnimation(place3, newX));
+        }
+
+        if (minutes % 10 != place4.number) {
+            hoursAnims.add(updateNumber(place4, minutes % 10, p4));
+            float newX = getX(minutesOffset, minutesPosition.get(1));
+            hoursAnims.add(placeAnimation(place4, newX));
         }
 
         hoursSet.playTogether(hoursAnims);
@@ -122,10 +144,10 @@ public class BitmapClockDrawer implements IClockDrawer {
     }
 
     private ObjectAnimator placeAnimation(NumberHolder place1, float newX) {
-        if (place1.x < 0){
+        if (place1.x < 0) {
             place1.x = newX;
         }
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(place1,"x", place1.x,newX);
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(place1, "x", place1.x, newX);
         objectAnimator.setInterpolator(new LinearInterpolator());
         objectAnimator.setDuration(1000);
         return objectAnimator;
@@ -148,8 +170,8 @@ public class BitmapClockDrawer implements IClockDrawer {
 
     private Animator getMoveAnimation(NumberHolder place, int oldNumber) {
         if (place != null) {
-            //List<HoursPositioning.Position> oldPosition = HoursPositioning.positions.get(oldNumber);
-            //List<HoursPositioning.Position> oldPosition = HoursPositioning.positions.get(oldNumber);
+            //List<HoursPositioning.Position> oldPosition = HoursPositioning.hoursPositions.get(oldNumber);
+            //List<HoursPositioning.Position> oldPosition = HoursPositioning.hoursPositions.get(oldNumber);
         }
         return null;
     }
@@ -178,7 +200,7 @@ public class BitmapClockDrawer implements IClockDrawer {
             Animator appearAnimation = getFrameAnimation(place.bgCurrent, 0, 40);
             if (appearAnimation != null) {
                 appearAnimation.setInterpolator(new LinearInterpolator());
-                if (goneAnimation!=null){
+                if (goneAnimation != null) {
                     appearAnimation.setStartDelay(500);
                 }
                 appearAnimation.setDuration(1000);
@@ -251,6 +273,10 @@ public class BitmapClockDrawer implements IClockDrawer {
         return null;
     }
 
+    private BitmapLoader.BitmapNumber getNumberMinutes(int i) {
+        return bitmapLoader.createNumberMinutes(i);
+    }
+
     private BitmapLoader.BitmapNumber getNumber(int i) {
         return bitmapLoader.createNumber(i);
     }
@@ -308,10 +334,10 @@ public class BitmapClockDrawer implements IClockDrawer {
 
         canvas.save();
 
-        List<HoursPositioning.Position> position = HoursPositioning.positions.get(hours);
+        List<HoursPositioning.Position> position = HoursPositioning.hoursPositions.get(hours);
 
+        //draw hours
         canvas.translate(place1.x, 0);
-
         drawNumber(canvas, place1, place1.bgOld, 100);
         drawNumber(canvas, place1, place1.bgCurrent, 100);
         canvas.restore();
@@ -323,7 +349,23 @@ public class BitmapClockDrawer implements IClockDrawer {
         drawNumber(canvas, place2, place2.bgCurrent, 100);
         canvas.restore();
 
+        //draw minutes
+        canvas.save();
+        canvas.translate(place3.x, 0);
+        canvas.translate(0, -context.getResources().getDimensionPixelSize(R.dimen.minute_bottom_padding));
+        drawNumber(canvas, place3, place3.bgOld, numberScale);
+        drawNumber(canvas, place3, place3.bgCurrent, numberScale);
         canvas.restore();
+
+        canvas.save();
+        canvas.translate(place4.x, 0);
+        canvas.translate(0, -context.getResources().getDimensionPixelSize(R.dimen.minute_bottom_padding));
+        drawNumber(canvas, place4, place4.bgOld, numberScale);
+        drawNumber(canvas, place4, place4.bgCurrent, numberScale);
+        canvas.restore();
+
+        canvas.restore();
+
         //canvas.save();
         //canvas.translate(place2.x, place2.y);
         //drawNumber(canvas, place2, place2.bgOld, 100);
@@ -344,6 +386,18 @@ public class BitmapClockDrawer implements IClockDrawer {
         //canvas.restore();
     }
 
+    private float getMinutesTranslate() {
+        List<HoursPositioning.Position> pos = HoursPositioning.hoursPositions.get(hours);
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return pos.get(0).x * metrics.density;
+    }
+
+    private float getX(HoursPositioning.Position minutesOffset, HoursPositioning.Position position) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return getMinutesTranslate() + minutesOffset.x * metrics.density + position.x * metrics.density;
+        //return objectAnimator;
+    }
+
     private float getX(HoursPositioning.Position position) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return position.x * metrics.density;
@@ -353,10 +407,10 @@ public class BitmapClockDrawer implements IClockDrawer {
         int c = canvas.save();
         if (bitmap != null) {
             Drawable frame = bitmap.getFrame();
-            frame.setBounds(0, 0, frame.getIntrinsicWidth(),frame.getIntrinsicHeight());
-            //canvas.translate(0, getMeasuredHeight() - getMeasuredHeight() * percent / 100);
+            frame.setBounds(0, 0, frame.getIntrinsicWidth(), frame.getIntrinsicHeight());
+            canvas.translate(0, getMeasuredHeight() - frame.getIntrinsicHeight());
             frame.draw(canvas);
-            //canvas.translate(0, -(getMeasuredHeight() - getMeasuredHeight() * percent / 100));
+            canvas.translate(0, -(getMeasuredHeight() - frame.getIntrinsicHeight()));
         }
         canvas.restoreToCount(c);
     }

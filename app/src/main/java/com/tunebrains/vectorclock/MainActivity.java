@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     //clockHeight += 10;
                     //bitmap = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888);
                     //drawer.updateSize(clockWidth, clockHeight);
-                    startTime += TimeUnit.HOURS.toMillis(1);
+                    startTime += TimeUnit.MINUTES.toMillis(1);
                     drawer.updateTime(startTime);
                 }
             }
