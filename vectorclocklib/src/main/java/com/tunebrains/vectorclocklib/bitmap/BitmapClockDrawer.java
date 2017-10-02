@@ -111,27 +111,35 @@ public class BitmapClockDrawer implements IClockDrawer {
         HoursPositioning.Position minutesOffset = HoursPositioning.minutesOffset.get(hours);
 
         if (hours / 10 != place1.number) {
-            hoursAnims.add(updateNumber(place1, hours / 10, p1));
+            Animator e = updateNumber(place1, hours / 10, p1);
+            if (e != null) { hoursAnims.add(e); }
             float newX = getX(hoursPosition.get(0));
-            hoursAnims.add(placeAnimation(place1, newX));
+            ObjectAnimator e1 = placeAnimation(place1, newX);
+            if (e1 != null) { hoursAnims.add(e1); }
         }
 
         if (hours % 10 != place2.number) {
-            hoursAnims.add(updateNumber(place2, hours % 10, p2));
+            Animator e = updateNumber(place2, hours % 10, p2);
+            if (e != null) { hoursAnims.add(e); }
             float newX = getX(hoursPosition.get(1));
-            hoursAnims.add(placeAnimation(place2, newX));
+            ObjectAnimator e1 = placeAnimation(place2, newX);
+            if (e1 != null) { hoursAnims.add(e1); }
         }
 
         if (minutes / 10 != place3.number) {
-            hoursAnims.add(updateNumber(place3, minutes / 10, p3));
+            Animator e1 = updateNumber(place3, minutes / 10, p3);
+            if (e1 != null) { hoursAnims.add(e1); }
             float newX = getX(minutesOffset, minutesPosition.get(0));
-            hoursAnims.add(placeAnimation(place3, newX));
+            ObjectAnimator e = placeAnimation(place3, newX);
+            if (e != null) { hoursAnims.add(e); }
         }
 
         if (minutes % 10 != place4.number) {
-            hoursAnims.add(updateNumber(place4, minutes % 10, p4));
+            Animator e1 = updateNumber(place4, minutes % 10, p4);
+            if (e1 != null) { hoursAnims.add(e1); }
             float newX = getX(minutesOffset, minutesPosition.get(1));
-            hoursAnims.add(placeAnimation(place4, newX));
+            ObjectAnimator e = placeAnimation(place4, newX);
+            if (e != null) { hoursAnims.add(e); }
         }
 
         hoursSet.playTogether(hoursAnims);
