@@ -237,6 +237,7 @@ public class BitmapClockDrawer implements IClockDrawer {
             place.number = newNumber;
             place.bgOld = null;
             place.bgCurrent = p4;
+            p4.setFrame(40);
             return null;
         }
     }
