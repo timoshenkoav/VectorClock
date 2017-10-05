@@ -71,11 +71,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 synchronized (MainActivity.this) {
-                    //clockWidth += 10;
-                    //clockHeight += 10;
-                    //bitmap = Bitmap.createBitmap(1024, 1024, Bitmap.Config.ARGB_8888);
-                    //drawer.updateSize(clockWidth, clockHeight);
+                    startTime += TimeUnit.HOURS.toMillis(1);
+                    drawer.updateTime(startTime);
+                    bitmapDigitalClock.updateTime(startTime);
+                }
+            }
+        });
+        findViewById(R.id.add_1_minute).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                synchronized (MainActivity.this) {
                     startTime += TimeUnit.MINUTES.toMillis(1);
+                    drawer.updateTime(startTime);
+                    bitmapDigitalClock.updateTime(startTime);
+                }
+            }
+        });
+        findViewById(R.id.add_10_minute).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                synchronized (MainActivity.this) {
+                    startTime += TimeUnit.MINUTES.toMillis(10);
                     drawer.updateTime(startTime);
                     bitmapDigitalClock.updateTime(startTime);
                 }

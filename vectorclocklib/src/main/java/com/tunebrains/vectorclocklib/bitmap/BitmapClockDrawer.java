@@ -132,11 +132,19 @@ public class BitmapClockDrawer implements IClockDrawer {
             float newX = getX(minutesOffset, minutesPosition.get(0));
             ObjectAnimator e = placeAnimation(place3, newX);
             if (e != null) { hoursAnims.add(e); }
+        }else{
+            float newX = getX(minutesOffset, minutesPosition.get(0));
+            ObjectAnimator e = placeAnimation(place3, newX);
+            if (e != null) { hoursAnims.add(e); }
         }
 
         if (minutes % 10 != place4.number) {
             Animator e1 = updateNumber(place4, minutes % 10, p4);
             if (e1 != null) { hoursAnims.add(e1); }
+            float newX = getX(minutesOffset, minutesPosition.get(1));
+            ObjectAnimator e = placeAnimation(place4, newX);
+            if (e != null) { hoursAnims.add(e); }
+        }else{
             float newX = getX(minutesOffset, minutesPosition.get(1));
             ObjectAnimator e = placeAnimation(place4, newX);
             if (e != null) { hoursAnims.add(e); }
@@ -398,6 +406,9 @@ public class BitmapClockDrawer implements IClockDrawer {
     private float getMinutesTranslate() {
         List<HoursPositioning.Position> pos = HoursPositioning.hoursPositions.get(hours);
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        if (pos.get(0).number == -1){
+            return pos.get(1).x * metrics.density;
+        }
         return pos.get(0).x * metrics.density;
     }
 
