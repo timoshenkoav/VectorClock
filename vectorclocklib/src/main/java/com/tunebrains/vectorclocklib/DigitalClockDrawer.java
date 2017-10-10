@@ -363,7 +363,7 @@ public class DigitalClockDrawer implements IClockDrawer {
         place2.x = left;
         left += calcWidth(place2.bgCurrent) + numberSpace;
         place3.x = left;
-        left += calcWidth(place3.bgCurrent, numberScale) + HoursPositioning.getNumberSpaceMultiplier(place3.number, place4.number)*numberSpace;
+        left += calcWidth(place3.bgCurrent, numberScale) + HoursPositioning.getMinutesNumberSpaceMultiplier(place3.number, place4.number)*numberSpace;
         place4.x = left;
     }
 

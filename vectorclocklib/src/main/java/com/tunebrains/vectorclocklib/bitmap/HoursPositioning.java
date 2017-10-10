@@ -22,6 +22,7 @@ public class HoursPositioning {
     }
 
     public static final HashMap<Pair<Integer, Integer>, Float> numbersSpaceMultiplier = new HashMap<>();
+    public static final HashMap<Pair<Integer, Integer>, Float> minutesNumbersSpaceMultiplier = new HashMap<>();
 
     public static final HashMap<Integer, List<Position>> hoursPositions = new HashMap<>();
     public static final HashMap<Integer, List<Position>> minutesPositions = new HashMap<>();
@@ -170,6 +171,12 @@ public class HoursPositioning {
 
     public static float getNumberSpaceMultiplier(int first, int second) {
         Float v = numbersSpaceMultiplier.get(Pair.create(first, second));
+        if (v == null) { return 1; }
+        return v.floatValue();
+    }
+
+    public static float getMinutesNumberSpaceMultiplier(int first, int second) {
+        Float v = minutesNumbersSpaceMultiplier.get(Pair.create(first, second));
         if (v == null) { return 1; }
         return v.floatValue();
     }
