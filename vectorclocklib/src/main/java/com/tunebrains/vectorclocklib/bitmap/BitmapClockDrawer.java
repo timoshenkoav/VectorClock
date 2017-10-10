@@ -178,7 +178,7 @@ public class BitmapClockDrawer implements IClockDrawer {
             x -= getLeftOffset(position);
             switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
                 case Gravity.CENTER_HORIZONTAL:
-                    x += (measuredWidth - (minWidth(hours, minutes, measuredHeight)))/2;
+                    x += (measuredWidth - (minWidth(hours, minutes, measuredHeight))) / 2;
                     break;
                 case Gravity.LEFT:
                     return x;
@@ -207,13 +207,18 @@ public class BitmapClockDrawer implements IClockDrawer {
     }
 
     private ObjectAnimator placeAnimation(NumberHolder place1, float newX) {
-        if (place1.x < 0) {
+        if (animated) {
+            if (place1.x < 0) {
+                place1.x = newX;
+            }
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(place1, "x", place1.x, newX);
+            objectAnimator.setInterpolator(new LinearInterpolator());
+            objectAnimator.setDuration(1000);
+            return objectAnimator;
+        } else {
             place1.x = newX;
+            return null;
         }
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(place1, "x", place1.x, newX);
-        objectAnimator.setInterpolator(new LinearInterpolator());
-        objectAnimator.setDuration(1000);
-        return objectAnimator;
     }
 
     //private void calcPlaceY() {
@@ -300,7 +305,9 @@ public class BitmapClockDrawer implements IClockDrawer {
             place.number = newNumber;
             place.bgOld = null;
             place.bgCurrent = p4;
-            p4.setFrame(40);
+            if (p4 != null) {
+                p4.setFrame(40);
+            }
             return null;
         }
     }
@@ -396,7 +403,9 @@ public class BitmapClockDrawer implements IClockDrawer {
     public void draw(Canvas canvas) {
 
         canvas.save();
-
+        if (small && canvas.getHeight() > measuredHeight) {
+            canvas.scale(canvas.getHeight() / (float) measuredHeight, canvas.getHeight() / (float) measuredHeight);
+        }
         canvas.save();
 
         //draw hours
@@ -547,14 +556,14 @@ public class BitmapClockDrawer implements IClockDrawer {
             if (hours >= 10) {
                 width -= (getX(HoursPositioning.clockPads.get(hours / 10).first));
                 if (hourPosition.get(0).number != -1) {
-                    width -=getX(hourPosition.get(0).x);
+                    width -= getX(hourPosition.get(0).x);
                 } else {
                     width -= getX(hourPosition.get(1).x);
                 }
             } else {
                 width -= getX(HoursPositioning.clockPads.get(hours).first);
                 if (hourPosition.get(0).number != -1) {
-                    width -=getX(hourPosition.get(0).x);
+                    width -= getX(hourPosition.get(0).x);
                 } else {
                     width -= getX(hourPosition.get(1).x);
                 }

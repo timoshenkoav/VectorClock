@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
-import com.tunebrains.vectorclocklib.BitmapDigitalClock;
 import com.tunebrains.vectorclocklib.IClockDrawer;
 import com.tunebrains.vectorclocklib.VectorNumberAnimator;
 import com.tunebrains.vectorclocklib.bitmap.BitmapClockDrawer;
@@ -34,7 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private int smallHeight;
     private int smallWidth;
 
-    private static final boolean DRAW_LARGE = false;
+    private static final boolean DRAW_LARGE = true;
+    private boolean is24h = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         smallDrawer.setVectorNumberAnimator(vectorNumberAnimator);
         smallDrawer.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
         smallDrawer.setNumberScale(50);
-        smallDrawer.setIs24h(true);
+        smallDrawer.setIs24h(is24h);
         smallDrawer.setSmall(true);
 
         clockWidth = getResources().getDimensionPixelSize(R.dimen.clock_width);
@@ -61,23 +62,34 @@ public class MainActivity extends AppCompatActivity {
         smallHeight = getResources().getDimensionPixelSize(R.dimen.small_clock_height);
         smallWidth = smallDrawer.getMinWidth(smallHeight);
 
+        int bitmapHeight = getResources().getDimensionPixelSize(R.dimen.clock_view_height);
+        int bitmapWidth = smallDrawer.getMinWidth(bitmapHeight);
 
-        smallBitmap= Bitmap.createBitmap(smallWidth, clockHeight, Bitmap.Config.ARGB_8888);
+        smallBitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
 
         vectorNumberAnimator.setNumberColor(getResources().getColor(R.color.number_color));
 
+        findViewById(R.id.toggle_is_24).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                is24h = !is24h;
+                smallDrawer.setIs24h(is24h);
+                largeDrawer.setIs24h(is24h);
+            }
+        });
 
-        smallDrawer.setGravity(Gravity.CENTER);
+        smallDrawer.setGravity(Gravity.RIGHT);
 
         smallDrawer.measure(smallWidth, clockHeight);
 
-        if (DRAW_LARGE){
+        if (DRAW_LARGE) {
+            largeDrawer.setAnimated(false);
             largeDrawer.setVectorNumberAnimator(vectorNumberAnimator);
             largeDrawer.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
             largeDrawer.setNumberScale(50);
-            largeDrawer.setIs24h(true);
+            largeDrawer.setIs24h(is24h);
             bitmap = Bitmap.createBitmap(clockWidth, clockHeight, Bitmap.Config.ARGB_8888);
-            largeDrawer.setGravity(Gravity.RIGHT | Gravity.BOTTOM);
+            largeDrawer.setGravity(Gravity.BOTTOM);
             largeDrawer.measure(clockWidth, clockHeight);
             largeDrawer.updateTime(System.currentTimeMillis());
         }
@@ -134,9 +146,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
     }
 
     @Override

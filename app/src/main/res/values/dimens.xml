@@ -5,4 +5,5 @@
     <dimen name="clock_width">252dp</dimen>
     <dimen name="clock_height">90dp</dimen>
     <dimen name="small_clock_height">90dp</dimen>
+    <dimen name="clock_view_height">200dp</dimen>
 </resources>
