@@ -177,6 +177,9 @@ public class BitmapClockDrawer implements IClockDrawer {
             float x = 0;
             x -= getLeftOffset(position);
             switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+                case Gravity.CENTER_HORIZONTAL:
+                    x += (measuredWidth - (minWidth(hours, minutes, measuredHeight)))/2;
+                    break;
                 case Gravity.LEFT:
                     return x;
                 case Gravity.RIGHT:
@@ -473,14 +476,10 @@ public class BitmapClockDrawer implements IClockDrawer {
     private void drawNumber(Canvas canvas, NumberHolder holder, BitmapLoader.BitmapNumber bitmap, int percent) {
         int c = canvas.save();
         if (bitmap != null) {
-            Paint p = new Paint();
-            p.setColor(Color.argb(50, 255, 0, 0));
-            p.setStyle(Paint.Style.FILL);
 
             Drawable frame = bitmap.getFrame();
             frame.setBounds(0, 0, frame.getIntrinsicWidth(), frame.getIntrinsicHeight());
             canvas.translate(0, getMeasuredHeight() - frame.getIntrinsicHeight());
-            canvas.drawRect(0, 0, frame.getIntrinsicWidth(), frame.getIntrinsicHeight(), p);
             frame.draw(canvas);
             canvas.translate(0, -(getMeasuredHeight() - frame.getIntrinsicHeight()));
         }

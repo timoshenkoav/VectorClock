@@ -62,14 +62,14 @@ public class MainActivity extends AppCompatActivity {
         smallWidth = smallDrawer.getMinWidth(smallHeight);
 
 
-        smallBitmap= Bitmap.createBitmap(smallWidth, smallHeight, Bitmap.Config.ARGB_8888);
+        smallBitmap= Bitmap.createBitmap(smallWidth, clockHeight, Bitmap.Config.ARGB_8888);
 
         vectorNumberAnimator.setNumberColor(getResources().getColor(R.color.number_color));
 
 
-        smallDrawer.setGravity(Gravity.RIGHT);
+        smallDrawer.setGravity(Gravity.CENTER);
 
-        smallDrawer.measure(smallWidth, smallHeight);
+        smallDrawer.measure(smallWidth, clockHeight);
 
         if (DRAW_LARGE){
             largeDrawer.setVectorNumberAnimator(vectorNumberAnimator);
