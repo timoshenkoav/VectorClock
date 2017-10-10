@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.Gravity;
 import com.sdsmdg.harjot.vectormaster.VectorMasterDrawable;
+import com.tunebrains.vectorclocklib.bitmap.HoursPositioning;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -358,7 +359,7 @@ public class DigitalClockDrawer implements IClockDrawer {
     private void calcPlaceY() {
         int left = getLeftMargin();
         place1.x = left;
-        left += calcWidth(place1.bgCurrent) + numberSpace;
+        left += calcWidth(place1.bgCurrent) + HoursPositioning.getNumberSpaceMultiplier(place1.number, place2.number) * numberSpace;
         place2.x = left;
         left += calcWidth(place2.bgCurrent) + numberSpace;
         place3.x = left;
@@ -414,7 +415,7 @@ public class DigitalClockDrawer implements IClockDrawer {
     @Override
     public int getMinWidth(int height) {
         int currentNumberWidth = Math.round(height * maxNumberWidth / 100.f);
-        int smallNumberWidth = Math.round((height * numberScale/100) * maxNumberWidth / 100.f);
+        int smallNumberWidth = Math.round((height * numberScale / 100) * maxNumberWidth / 100.f);
         int width = currentNumberWidth * 2 + (smallNumberWidth * 2) + numberSpace * 3;
         //width += calcWidth(place1.bgCurrent,height,100) + numberSpace;
         //width += calcWidth(place2.bgCurrent,height,100) + numberSpace;

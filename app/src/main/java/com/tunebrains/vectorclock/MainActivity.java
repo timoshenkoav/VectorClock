@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import com.tunebrains.vectorclocklib.DigitalClockDrawer;
 import com.tunebrains.vectorclocklib.IClockDrawer;
 import com.tunebrains.vectorclocklib.VectorNumberAnimator;
 import com.tunebrains.vectorclocklib.bitmap.BitmapClockDrawer;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         handler = new Handler();
 
         smallDrawer = new BitmapClockDrawer(this);
-        largeDrawer = new BitmapClockDrawer(this);
+        largeDrawer = new DigitalClockDrawer(this);
 
         vectorNumberAnimator = new VectorNumberAnimator(this);
 
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         smallDrawer.measure(smallWidth, clockHeight);
 
         if (DRAW_LARGE) {
-            largeDrawer.setAnimated(false);
+            largeDrawer.setAnimated(true);
             largeDrawer.setVectorNumberAnimator(vectorNumberAnimator);
             largeDrawer.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
             largeDrawer.setNumberScale(50);
