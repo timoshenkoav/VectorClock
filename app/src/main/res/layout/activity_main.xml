@@ -9,10 +9,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#0f0"/>
-    <com.tunebrains.vectorclocklib.BitmapDigitalClock
-        android:layout_width="match_parent"
-        android:id="@+id/bitmap_digital_clock"
-        android:layout_height="wrap_content"/>
+    <ImageView
+        android:id="@+id/small_clock_image"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/small_clock_height"
+        android:scaleType="centerInside"
+        android:background="#0f0"/>
     <Button
         android:id="@+id/size_increase"
         android:layout_width="wrap_content"

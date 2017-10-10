@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
+import android.util.Pair;
+import android.view.Gravity;
 import android.view.animation.LinearInterpolator;
 import com.tunebrains.vectorclocklib.IClockDrawer;
 import com.tunebrains.vectorclocklib.IVectorNumberAnimator;
@@ -35,8 +37,9 @@ public class BitmapClockDrawer implements IClockDrawer {
     private int gravity;
     private int numberSpace;
     private int hours;
-
+    private int minResHeight;
     private Context context;
+    private boolean small = false;
 
     public int getMeasuredHeight() {
         return measuredHeight;
@@ -73,6 +76,7 @@ public class BitmapClockDrawer implements IClockDrawer {
         place2 = new NumberHolder();
         place3 = new NumberHolder();
         place4 = new NumberHolder();
+        minResHeight = context.getResources().getDimensionPixelSize(R.dimen.min_clock_height);
     }
 
     @Override
@@ -113,7 +117,11 @@ public class BitmapClockDrawer implements IClockDrawer {
         if (hours / 10 != place1.number) {
             Animator e = updateNumber(place1, hours / 10, p1);
             if (e != null) { hoursAnims.add(e); }
-            float newX = getX(hoursPosition.get(0));
+            float newX = initialOffset() + getX(hoursPosition.get(0));
+            ObjectAnimator e1 = placeAnimation(place1, newX);
+            if (e1 != null) { hoursAnims.add(e1); }
+        } else {
+            float newX = initialOffset() + getX(hoursPosition.get(0));
             ObjectAnimator e1 = placeAnimation(place1, newX);
             if (e1 != null) { hoursAnims.add(e1); }
         }
@@ -121,7 +129,11 @@ public class BitmapClockDrawer implements IClockDrawer {
         if (hours % 10 != place2.number) {
             Animator e = updateNumber(place2, hours % 10, p2);
             if (e != null) { hoursAnims.add(e); }
-            float newX = getX(hoursPosition.get(1));
+            float newX = initialOffset() + getX(hoursPosition.get(1));
+            ObjectAnimator e1 = placeAnimation(place2, newX);
+            if (e1 != null) { hoursAnims.add(e1); }
+        } else {
+            float newX = initialOffset() + getX(hoursPosition.get(1));
             ObjectAnimator e1 = placeAnimation(place2, newX);
             if (e1 != null) { hoursAnims.add(e1); }
         }
@@ -129,11 +141,11 @@ public class BitmapClockDrawer implements IClockDrawer {
         if (minutes / 10 != place3.number) {
             Animator e1 = updateNumber(place3, minutes / 10, p3);
             if (e1 != null) { hoursAnims.add(e1); }
-            float newX = getX(minutesOffset, minutesPosition.get(0));
+            float newX = initialOffset() + getX(minutesOffset, minutesPosition.get(0));
             ObjectAnimator e = placeAnimation(place3, newX);
             if (e != null) { hoursAnims.add(e); }
-        }else{
-            float newX = getX(minutesOffset, minutesPosition.get(0));
+        } else {
+            float newX = initialOffset() + getX(minutesOffset, minutesPosition.get(0));
             ObjectAnimator e = placeAnimation(place3, newX);
             if (e != null) { hoursAnims.add(e); }
         }
@@ -141,11 +153,11 @@ public class BitmapClockDrawer implements IClockDrawer {
         if (minutes % 10 != place4.number) {
             Animator e1 = updateNumber(place4, minutes % 10, p4);
             if (e1 != null) { hoursAnims.add(e1); }
-            float newX = getX(minutesOffset, minutesPosition.get(1));
+            float newX = initialOffset() + getX(minutesOffset, minutesPosition.get(1));
             ObjectAnimator e = placeAnimation(place4, newX);
             if (e != null) { hoursAnims.add(e); }
-        }else{
-            float newX = getX(minutesOffset, minutesPosition.get(1));
+        } else {
+            float newX = initialOffset() + getX(minutesOffset, minutesPosition.get(1));
             ObjectAnimator e = placeAnimation(place4, newX);
             if (e != null) { hoursAnims.add(e); }
         }
@@ -157,6 +169,38 @@ public class BitmapClockDrawer implements IClockDrawer {
         //}
 
         return true;
+    }
+
+    private float initialOffset() {
+        if (small) {
+            List<HoursPositioning.Position> position = HoursPositioning.hoursPositions.get(hours);
+            float x = 0;
+            x -= getLeftOffset(position);
+            switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+                case Gravity.LEFT:
+                    return x;
+                case Gravity.RIGHT:
+                    x += measuredWidth - (minWidth(hours, minutes, measuredHeight));
+                    return x;
+            }
+            return x;
+        }
+        return 0;
+    }
+
+    private float getLeftOffset(List<HoursPositioning.Position> position) {
+        float x = 0;
+        if (position.get(0).number == -1) {
+            x += getX(position.get(1).x);
+        } else {
+            x += getX(position.get(0).x);
+        }
+        if (hours >= 10) {
+            x += getX(HoursPositioning.clockPads.get(hours / 10).first);
+        } else {
+            x += getX(HoursPositioning.clockPads.get(hours).first);
+        }
+        return x;
     }
 
     private ObjectAnimator placeAnimation(NumberHolder place1, float newX) {
@@ -347,11 +391,10 @@ public class BitmapClockDrawer implements IClockDrawer {
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.save();
 
         canvas.save();
 
-        List<HoursPositioning.Position> position = HoursPositioning.hoursPositions.get(hours);
+        canvas.save();
 
         //draw hours
         canvas.translate(place1.x, 0);
@@ -382,7 +425,6 @@ public class BitmapClockDrawer implements IClockDrawer {
         canvas.restore();
 
         canvas.restore();
-
         //canvas.save();
         //canvas.translate(place2.x, place2.y);
         //drawNumber(canvas, place2, place2.bgOld, 100);
@@ -406,7 +448,7 @@ public class BitmapClockDrawer implements IClockDrawer {
     private float getMinutesTranslate() {
         List<HoursPositioning.Position> pos = HoursPositioning.hoursPositions.get(hours);
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        if (pos.get(0).number == -1){
+        if (pos.get(0).number == -1) {
             return pos.get(1).x * metrics.density;
         }
         return pos.get(0).x * metrics.density;
@@ -423,12 +465,22 @@ public class BitmapClockDrawer implements IClockDrawer {
         return position.x * metrics.density;
     }
 
+    private float getX(float x) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return x * metrics.density;
+    }
+
     private void drawNumber(Canvas canvas, NumberHolder holder, BitmapLoader.BitmapNumber bitmap, int percent) {
         int c = canvas.save();
         if (bitmap != null) {
+            Paint p = new Paint();
+            p.setColor(Color.argb(50, 255, 0, 0));
+            p.setStyle(Paint.Style.FILL);
+
             Drawable frame = bitmap.getFrame();
             frame.setBounds(0, 0, frame.getIntrinsicWidth(), frame.getIntrinsicHeight());
             canvas.translate(0, getMeasuredHeight() - frame.getIntrinsicHeight());
+            canvas.drawRect(0, 0, frame.getIntrinsicWidth(), frame.getIntrinsicHeight(), p);
             frame.draw(canvas);
             canvas.translate(0, -(getMeasuredHeight() - frame.getIntrinsicHeight()));
         }
@@ -455,7 +507,71 @@ public class BitmapClockDrawer implements IClockDrawer {
     }
 
     @Override
+    public void setSmall(boolean small) {
+        this.small = small;
+    }
+
+    @Override
     public int getMinWidth(int height) {
-        return 200;
+        return Math.round(minWidth(24, 0) * (height / (float) minResHeight));
+    }
+
+    public float minWidth(long time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        int hours = calendar.get(Calendar.HOUR_OF_DAY);
+        int minutes = calendar.get(Calendar.MINUTE);
+        return minWidth(hours, minutes);
+    }
+
+    public float minWidth(int hours, int minutes, int height) {
+        return minWidth(hours, minutes) * height / minResHeight;
+    }
+
+    public float minWidth(int hours, int minutes) {
+        float width = 0;
+
+        List<HoursPositioning.Position> hourPosition = HoursPositioning.hoursPositions.get(hours);
+        List<HoursPositioning.Position> minutesPosition = HoursPositioning.minutesPositions.get(minutes);
+        HoursPositioning.Position minutesOffset = HoursPositioning.minutesOffset.get(hours);
+        if (hourPosition.get(0).number != -1) {
+            width = width + getX(hourPosition.get(0).x);
+        } else {
+            width = width + getX(hourPosition.get(1).x);
+        }
+        width += getX(minutesOffset.x);
+        width += getX(minutesPosition.get(1).x) + getNumberMinutes(minutesPosition.get(1).number).getFrame(40).getIntrinsicWidth();
+        if (small) {
+            if (hours == 24) {
+                hours = 0;
+            }
+            if (hours >= 10) {
+                width -= (getX(HoursPositioning.clockPads.get(hours / 10).first));
+                if (hourPosition.get(0).number != -1) {
+                    width -=getX(hourPosition.get(0).x);
+                } else {
+                    width -= getX(hourPosition.get(1).x);
+                }
+            } else {
+                width -= getX(HoursPositioning.clockPads.get(hours).first);
+                if (hourPosition.get(0).number != -1) {
+                    width -=getX(hourPosition.get(0).x);
+                } else {
+                    width -= getX(hourPosition.get(1).x);
+                }
+            }
+            width -= getX(HoursPositioning.clockPads.get(minutes % 10).second);
+        }
+        return width;
+    }
+
+    public Pair<Integer, Integer> minClockPads() {
+        int hours = 24;
+        int minutes = 0;
+        List<HoursPositioning.Position> hoursPosition = HoursPositioning.hoursPositions.get(hours);
+        List<HoursPositioning.Position> minutesPosition = HoursPositioning.minutesPositions.get(minutes);
+        HoursPositioning.Position minutesOffset = HoursPositioning.minutesOffset.get(hours);
+
+        return Pair.create(0, 0);
     }
 }

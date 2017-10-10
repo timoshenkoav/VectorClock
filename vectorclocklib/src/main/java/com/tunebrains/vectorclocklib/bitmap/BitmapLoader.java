@@ -46,6 +46,9 @@ public class BitmapLoader {
         public Drawable getFrame() {
             return loadFrame(number, currentFrame);
         }
+        public Drawable getFrame(int frame) {
+            return loadFrame(number, frame);
+        }
 
         private Drawable loadFrame(int number, int currentFrame) {
             if (minutes){

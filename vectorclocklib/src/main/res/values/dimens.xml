@@ -3,4 +3,27 @@
     <dimen name="minute_bottom_padding">2dp</dimen>
     <dimen name="min_clock_width">360dp</dimen>
     <dimen name="min_clock_height">90dp</dimen>
+
+    <dimen name="hours_0_left_pad">44.5dp</dimen>
+    <dimen name="hours_1_left_pad">51.25dp</dimen>
+    <dimen name="hours_2_left_pad">43.75dp</dimen>
+    <dimen name="hours_3_left_pad">44.5dp</dimen>
+    <dimen name="hours_4_left_pad">39.5dp</dimen>
+    <dimen name="hours_5_left_pad">46dp</dimen>
+    <dimen name="hours_6_left_pad">43.5dp</dimen>
+    <dimen name="hours_7_left_pad">44dp</dimen>
+    <dimen name="hours_8_left_pad">44.5dp</dimen>
+    <dimen name="hours_9_left_pad">43.75dp</dimen>
+
+    <dimen name="minutes_0_right_pad">9dp</dimen>
+    <dimen name="minutes_1_right_pad">12.5dp</dimen>
+    <dimen name="minutes_2_right_pad">10.5dp</dimen>
+    <dimen name="minutes_3_right_pad">9.25dp</dimen>
+    <dimen name="minutes_4_right_pad">9dp</dimen>
+    <dimen name="minutes_5_right_pad">9dp</dimen>
+    <dimen name="minutes_6_right_pad">9dp</dimen>
+    <dimen name="minutes_7_right_pad">9dp</dimen>
+    <dimen name="minutes_8_right_pad">9dp</dimen>
+    <dimen name="minutes_9_right_pad">9dp</dimen>
+
 </resources>

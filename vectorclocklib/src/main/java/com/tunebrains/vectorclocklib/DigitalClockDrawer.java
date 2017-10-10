@@ -220,6 +220,11 @@ public class DigitalClockDrawer implements IClockDrawer {
     }
 
     @Override
+    public void setSmall(boolean small) {
+
+    }
+
+    @Override
     public void setGravity(int gravity) {
         this.gravity = gravity;
     }

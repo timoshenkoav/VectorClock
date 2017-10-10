@@ -23,57 +23,90 @@ public class MainActivity extends AppCompatActivity {
 
     ScheduledExecutorService executorService;
 
-    IClockDrawer drawer;
+    IClockDrawer largeDrawer;
+    IClockDrawer smallDrawer;
     private VectorNumberAnimator vectorNumberAnimator;
 
     int clockWidth, clockHeight;
     private Bitmap bitmap;
+    private Bitmap smallBitmap;
+    ImageView smallClock;
+    private int smallHeight;
+    private int smallWidth;
 
+    private static final boolean DRAW_LARGE = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        smallClock = (ImageView) findViewById(R.id.small_clock_image);
         startTime = System.currentTimeMillis();
         handler = new Handler();
 
-        drawer = new BitmapClockDrawer(this);
+        smallDrawer = new BitmapClockDrawer(this);
+        largeDrawer = new BitmapClockDrawer(this);
+
         vectorNumberAnimator = new VectorNumberAnimator(this);
-        drawer.setVectorNumberAnimator(vectorNumberAnimator);
-        drawer.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
-        drawer.setNumberScale(50);
-        drawer.setIs24h(true);
+
+        smallDrawer.setVectorNumberAnimator(vectorNumberAnimator);
+        smallDrawer.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
+        smallDrawer.setNumberScale(50);
+        smallDrawer.setIs24h(true);
+        smallDrawer.setSmall(true);
+
         clockWidth = getResources().getDimensionPixelSize(R.dimen.clock_width);
         clockHeight = getResources().getDimensionPixelSize(R.dimen.clock_height);
-        bitmap = Bitmap.createBitmap(clockWidth, clockHeight, Bitmap.Config.ARGB_8888);
+
+        smallHeight = getResources().getDimensionPixelSize(R.dimen.small_clock_height);
+        smallWidth = smallDrawer.getMinWidth(smallHeight);
+
+
+        smallBitmap= Bitmap.createBitmap(smallWidth, smallHeight, Bitmap.Config.ARGB_8888);
 
         vectorNumberAnimator.setNumberColor(getResources().getColor(R.color.number_color));
-        drawer.setGravity(Gravity.RIGHT | Gravity.BOTTOM);
 
-        drawer.measure(clockWidth, clockHeight);
 
-        drawer.updateTime(System.currentTimeMillis());
+        smallDrawer.setGravity(Gravity.RIGHT);
+
+        smallDrawer.measure(smallWidth, smallHeight);
+
+        if (DRAW_LARGE){
+            largeDrawer.setVectorNumberAnimator(vectorNumberAnimator);
+            largeDrawer.setNumberSpace(getResources().getDimensionPixelSize(R.dimen.number_space));
+            largeDrawer.setNumberScale(50);
+            largeDrawer.setIs24h(true);
+            bitmap = Bitmap.createBitmap(clockWidth, clockHeight, Bitmap.Config.ARGB_8888);
+            largeDrawer.setGravity(Gravity.RIGHT | Gravity.BOTTOM);
+            largeDrawer.measure(clockWidth, clockHeight);
+            largeDrawer.updateTime(System.currentTimeMillis());
+        }
+        smallDrawer.updateTime(System.currentTimeMillis());
 
         final ImageView im = (ImageView) findViewById(R.id.digital_clock_image);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 synchronized (MainActivity.this) {
-                    drawer.draw(bitmap);
-                    im.setImageBitmap(bitmap);
+                    if (DRAW_LARGE) {
+                        largeDrawer.draw(bitmap);
+                        im.setImageBitmap(bitmap);
+                    }
+                    smallDrawer.draw(smallBitmap);
+                    smallClock.setImageBitmap(smallBitmap);
                 }
                 handler.postDelayed(this, 1);
             }
         }, 1);
-        final BitmapDigitalClock bitmapDigitalClock = (BitmapDigitalClock) findViewById(R.id.bitmap_digital_clock);
-        bitmapDigitalClock.updateTime(System.currentTimeMillis());
         findViewById(R.id.size_increase).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 synchronized (MainActivity.this) {
                     startTime += TimeUnit.HOURS.toMillis(1);
-                    drawer.updateTime(startTime);
-                    bitmapDigitalClock.updateTime(startTime);
+                    if (DRAW_LARGE) {
+                        largeDrawer.updateTime(startTime);
+                    }
+                    smallDrawer.updateTime(startTime);
                 }
             }
         });
@@ -82,8 +115,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 synchronized (MainActivity.this) {
                     startTime += TimeUnit.MINUTES.toMillis(1);
-                    drawer.updateTime(startTime);
-                    bitmapDigitalClock.updateTime(startTime);
+                    if (DRAW_LARGE) {
+                        largeDrawer.updateTime(startTime);
+                    }
+                    smallDrawer.updateTime(startTime);
                 }
             }
         });
@@ -92,8 +127,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 synchronized (MainActivity.this) {
                     startTime += TimeUnit.MINUTES.toMillis(10);
-                    drawer.updateTime(startTime);
-                    bitmapDigitalClock.updateTime(startTime);
+                    if (DRAW_LARGE) {
+                        largeDrawer.updateTime(startTime);
+                    }
+                    smallDrawer.updateTime(startTime);
                 }
             }
         });
@@ -112,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         //        runOnUiThread(new Runnable() {
         //            @Override
         //            public void run() {
-        //                drawer.updateTime(startTime);
+        //                largeDrawer.updateTime(startTime);
         //                startTime += TimeUnit.HOURS.toMillis(1);
         //            }
         //        });

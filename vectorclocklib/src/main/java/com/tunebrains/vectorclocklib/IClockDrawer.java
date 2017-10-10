@@ -35,4 +35,6 @@ public interface IClockDrawer {
     void measure(int width, int height);
 
     int getMinWidth(int height);
+
+    void setSmall(boolean small);
 }
