@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.Pair;
@@ -40,6 +41,9 @@ public class BitmapClockDrawer implements IClockDrawer {
     private int minResHeight;
     private Context context;
     private boolean small = false;
+    private Bitmap cacheBitmap;
+    private Canvas cacheCanvas;
+    Paint cachePaint;
 
     public int getMeasuredHeight() {
         return measuredHeight;
@@ -52,7 +56,7 @@ public class BitmapClockDrawer implements IClockDrawer {
     private class NumberHolder {
         BitmapLoader.BitmapNumber bgOld;
         BitmapLoader.BitmapNumber bgCurrent;
-        float x = -1;
+        float x = Float.MIN_VALUE;
 
         public void setX(float x) {
             this.x = x;
@@ -77,6 +81,9 @@ public class BitmapClockDrawer implements IClockDrawer {
         place3 = new NumberHolder();
         place4 = new NumberHolder();
         minResHeight = context.getResources().getDimensionPixelSize(R.dimen.min_clock_height);
+        cachePaint = new Paint();
+        cachePaint.setAntiAlias(true);
+        cachePaint.setFilterBitmap(true);
     }
 
     @Override
@@ -208,7 +215,7 @@ public class BitmapClockDrawer implements IClockDrawer {
 
     private ObjectAnimator placeAnimation(NumberHolder place1, float newX) {
         if (animated) {
-            if (place1.x < 0) {
+            if (Float.compare(place1.x, Float.MIN_VALUE) == 0) {
                 place1.x = newX;
             }
             ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(place1, "x", place1.x, newX);
@@ -401,11 +408,34 @@ public class BitmapClockDrawer implements IClockDrawer {
 
     @Override
     public void draw(Canvas canvas) {
+        cacheBitmap.eraseColor(Color.TRANSPARENT);
+        drawCache(cacheCanvas);
 
+        canvas.drawBitmap(cacheBitmap, null, new Rect(0, 0, canvas.getWidth(), canvas.getHeight()), cachePaint);
+
+        //canvas.save();
+        //canvas.translate(place2.x, place2.y);
+        //drawNumber(canvas, place2, place2.bgOld, 100);
+        //drawNumber(canvas, place2, place2.bgCurrent, 100);
+        //canvas.restore();
+        //
+        //canvas.save();
+        //canvas.translate(place3.x, place3.y);
+        //drawNumber(canvas, place3,place3.bgOld, numberScale);
+        //drawNumber(canvas, place3, place3.bgCurrent, numberScale);
+        //canvas.restore();
+        //
+        //canvas.save();
+        //canvas.translate(place4.x, place4.y);
+        //
+        //drawNumber(canvas, place4, place4.bgOld, numberScale);
+        //drawNumber(canvas, place4, place4.bgCurrent, numberScale);
+        //canvas.restore();
+    }
+
+    private void drawCache(Canvas canvas) {
         canvas.save();
-        if (small && canvas.getHeight() > measuredHeight) {
-            canvas.scale(canvas.getHeight() / (float) measuredHeight, canvas.getHeight() / (float) measuredHeight);
-        }
+
         canvas.save();
 
         //draw hours
@@ -437,24 +467,6 @@ public class BitmapClockDrawer implements IClockDrawer {
         canvas.restore();
 
         canvas.restore();
-        //canvas.save();
-        //canvas.translate(place2.x, place2.y);
-        //drawNumber(canvas, place2, place2.bgOld, 100);
-        //drawNumber(canvas, place2, place2.bgCurrent, 100);
-        //canvas.restore();
-        //
-        //canvas.save();
-        //canvas.translate(place3.x, place3.y);
-        //drawNumber(canvas, place3,place3.bgOld, numberScale);
-        //drawNumber(canvas, place3, place3.bgCurrent, numberScale);
-        //canvas.restore();
-        //
-        //canvas.save();
-        //canvas.translate(place4.x, place4.y);
-        //
-        //drawNumber(canvas, place4, place4.bgOld, numberScale);
-        //drawNumber(canvas, place4, place4.bgCurrent, numberScale);
-        //canvas.restore();
     }
 
     private float getMinutesTranslate() {
@@ -512,6 +524,13 @@ public class BitmapClockDrawer implements IClockDrawer {
     public void measure(int width, int height) {
         measuredWidth = width;
         measuredHeight = height;
+        createDrawBitmap();
+    }
+
+    private void createDrawBitmap() {
+        if (cacheBitmap != null) { cacheBitmap.recycle(); }
+        cacheBitmap = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888);
+        cacheCanvas = new Canvas(cacheBitmap);
     }
 
     @Override

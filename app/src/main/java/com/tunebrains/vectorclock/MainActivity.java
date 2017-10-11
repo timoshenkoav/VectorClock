@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         handler = new Handler();
 
         smallDrawer = new BitmapClockDrawer(this);
-        largeDrawer = new DigitalClockDrawer(this);
+        largeDrawer = new BitmapClockDrawer(this);
 
         vectorNumberAnimator = new VectorNumberAnimator(this);
 
