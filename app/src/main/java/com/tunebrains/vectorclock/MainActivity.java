@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         int bitmapHeight = getResources().getDimensionPixelSize(R.dimen.clock_view_height);
         int bitmapWidth = smallDrawer.getMinWidth(bitmapHeight);
 
-        smallBitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
+        smallBitmap = Bitmap.createBitmap(bitmapWidth*2, bitmapHeight, Bitmap.Config.ARGB_8888);
 
         vectorNumberAnimator.setNumberColor(getResources().getColor(R.color.number_color));
 
@@ -153,9 +153,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.gravity_center).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                smallDrawer.setAnimated(false);
                 smallDrawer.setGravity(Gravity.CENTER);
-                smallDrawer.setAnimated(true);
                 if (DRAW_LARGE){
                     largeDrawer.setGravity(Gravity.CENTER);
                 }

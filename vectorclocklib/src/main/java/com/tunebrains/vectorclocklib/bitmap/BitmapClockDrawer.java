@@ -142,11 +142,11 @@ public class BitmapClockDrawer implements IClockDrawer {
             Animator e = updateNumber(place1, hours / 10, p1);
             if (e != null) { hoursAnims.add(e); }
             float newX = initialOffset() + getX(hoursPosition.get(0));
-            ObjectAnimator e1 = placeAnimation(place1, newX);
+            ObjectAnimator e1 = placeAnimation(place1, newX,animate);
             if (e1 != null) { hoursAnims.add(e1); }
         } else {
             float newX = initialOffset() + getX(hoursPosition.get(0));
-            ObjectAnimator e1 = placeAnimation(place1, newX);
+            ObjectAnimator e1 = placeAnimation(place1, newX,animate);
             if (e1 != null) { hoursAnims.add(e1); }
         }
 
@@ -154,11 +154,11 @@ public class BitmapClockDrawer implements IClockDrawer {
             Animator e = updateNumber(place2, hours % 10, p2);
             if (e != null) { hoursAnims.add(e); }
             float newX = initialOffset() + getX(hoursPosition.get(1));
-            ObjectAnimator e1 = placeAnimation(place2, newX);
+            ObjectAnimator e1 = placeAnimation(place2, newX,animate);
             if (e1 != null) { hoursAnims.add(e1); }
         } else {
             float newX = initialOffset() + getX(hoursPosition.get(1));
-            ObjectAnimator e1 = placeAnimation(place2, newX);
+            ObjectAnimator e1 = placeAnimation(place2, newX,animate);
             if (e1 != null) { hoursAnims.add(e1); }
         }
 
@@ -166,11 +166,11 @@ public class BitmapClockDrawer implements IClockDrawer {
             Animator e1 = updateNumber(place3, minutes / 10, p3);
             if (e1 != null) { hoursAnims.add(e1); }
             float newX = initialOffset() + getX(minutesOffset, minutesPosition.get(0));
-            ObjectAnimator e = placeAnimation(place3, newX);
+            ObjectAnimator e = placeAnimation(place3, newX,animate);
             if (e != null) { hoursAnims.add(e); }
         } else {
             float newX = initialOffset() + getX(minutesOffset, minutesPosition.get(0));
-            ObjectAnimator e = placeAnimation(place3, newX);
+            ObjectAnimator e = placeAnimation(place3, newX,animate);
             if (e != null) { hoursAnims.add(e); }
         }
 
@@ -178,11 +178,11 @@ public class BitmapClockDrawer implements IClockDrawer {
             Animator e1 = updateNumber(place4, minutes % 10, p4);
             if (e1 != null) { hoursAnims.add(e1); }
             float newX = initialOffset() + getX(minutesOffset, minutesPosition.get(1));
-            ObjectAnimator e = placeAnimation(place4, newX);
+            ObjectAnimator e = placeAnimation(place4, newX,animate);
             if (e != null) { hoursAnims.add(e); }
         } else {
             float newX = initialOffset() + getX(minutesOffset, minutesPosition.get(1));
-            ObjectAnimator e = placeAnimation(place4, newX);
+            ObjectAnimator e = placeAnimation(place4, newX,animate);
             if (e != null) { hoursAnims.add(e); }
         }
 
@@ -215,8 +215,8 @@ public class BitmapClockDrawer implements IClockDrawer {
         return 0;
     }
 
-    private ObjectAnimator placeAnimation(NumberHolder place1, float newX) {
-        if (animated) {
+    private ObjectAnimator placeAnimation(NumberHolder place1, float newX,boolean anim) {
+        if (animated && anim) {
             if (Float.compare(place1.x, Float.MIN_VALUE) == 0) {
                 place1.x = newX;
             }
@@ -390,7 +390,7 @@ public class BitmapClockDrawer implements IClockDrawer {
     public void setGravity(int gravity) {
         this.gravity = gravity;
         if (getMeasuredHeight() != 0) {
-            updateTime(hours, minutes, true);
+            updateTime(hours, minutes, false);
         }
     }
 
@@ -439,11 +439,21 @@ public class BitmapClockDrawer implements IClockDrawer {
 
     private void drawCache(Canvas canvas, float scale) {
         canvas.save();
-        int x = 0;
-        if (hours >= 10) {
-            x += getX(HoursPositioning.clockPads.get(hours / 10).first);
-        } else {
-            x += getX(HoursPositioning.clockPads.get(hours).first);
+        if (small) {
+            float x = 0;
+            float w = measuredWidth*scale;
+            float dw = canvas.getWidth() - w;
+            switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+                case Gravity.CENTER_HORIZONTAL:
+                    x += dw / 2;
+                    break;
+                case Gravity.LEFT:
+                    break;
+                case Gravity.RIGHT:
+                    x += dw;
+                    break;
+            }
+            canvas.translate(x, 0);
         }
         //Paint p = new Paint();
         //p.setColor(Color.BLACK);
