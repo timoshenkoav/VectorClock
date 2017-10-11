@@ -155,16 +155,17 @@ public class HoursPositioning {
         addMinutesGroup(58, 0, GROUP_16);
         addMinutesGroup(59, 0, GROUP_16);
 
-        clockPads.put(0, Pair.create(44.5f, 9.0f));
-        clockPads.put(1, Pair.create(51.25f, 12.5f));
-        clockPads.put(2, Pair.create(43.75f, 10.5f));
-        clockPads.put(3, Pair.create(44.5f, 9.25f));
-        clockPads.put(4, Pair.create(39.5f, 9.0f));
-        clockPads.put(5, Pair.create(46f, 9.0f));
-        clockPads.put(6, Pair.create(43.5f, 9.0f));
-        clockPads.put(7, Pair.create(44f, 9.0f));
-        clockPads.put(8, Pair.create(44.5f, 9.0f));
-        clockPads.put(9, Pair.create(43.75f, 9.0f));
+        float pads_multiplier = 1f;
+        clockPads.put(0, Pair.create(44.5f * pads_multiplier, 9.0f * pads_multiplier));
+        clockPads.put(1, Pair.create(51.25f * pads_multiplier, 12.5f * pads_multiplier));
+        clockPads.put(2, Pair.create(43.75f * pads_multiplier, 10.5f * pads_multiplier));
+        clockPads.put(3, Pair.create(44.5f * pads_multiplier, 9.25f * pads_multiplier));
+        clockPads.put(4, Pair.create(39.5f * pads_multiplier, 9.0f * pads_multiplier));
+        clockPads.put(5, Pair.create(46f * pads_multiplier, 9.0f * pads_multiplier));
+        clockPads.put(6, Pair.create(43.5f * pads_multiplier, 9.0f * pads_multiplier));
+        clockPads.put(7, Pair.create(44f * pads_multiplier, 9.0f * pads_multiplier));
+        clockPads.put(8, Pair.create(44.5f * pads_multiplier, 9.0f * pads_multiplier));
+        clockPads.put(9, Pair.create(43.75f * pads_multiplier, 9.0f * pads_multiplier));
 
         numbersSpaceMultiplier.put(Pair.create(1, 0), 3f);
     }

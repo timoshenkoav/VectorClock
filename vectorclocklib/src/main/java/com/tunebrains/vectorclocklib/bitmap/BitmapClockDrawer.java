@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
@@ -46,6 +45,7 @@ public class BitmapClockDrawer implements IClockDrawer {
     private Canvas cacheCanvas;
     Paint cachePaint;
     private Paint numberPaint;
+    private int backgrounColor = Color.TRANSPARENT;
 
     public int getMeasuredHeight() {
         return measuredHeight;
@@ -120,7 +120,7 @@ public class BitmapClockDrawer implements IClockDrawer {
             throw new RuntimeException("call measure before");
         }
 
-        if (this.fullHours == fullHours && this.minutes == minutes) { return false; }
+        //if (this.fullHours == fullHours && this.minutes == minutes) { return false; }
         this.fullHours = fullHours;
         this.minutes = minutes;
 
@@ -213,21 +213,6 @@ public class BitmapClockDrawer implements IClockDrawer {
             return x;
         }
         return 0;
-    }
-
-    private float getLeftOffset(List<HoursPositioning.Position> position) {
-        float x = 0;
-        if (position.get(0).number == -1) {
-            x += getX(position.get(1).x);
-        } else {
-            x += getX(position.get(0).x);
-        }
-        if (hours >= 10) {
-            x += getX(HoursPositioning.clockPads.get(hours / 10).first);
-        } else {
-            x += getX(HoursPositioning.clockPads.get(hours).first);
-        }
-        return x;
     }
 
     private ObjectAnimator placeAnimation(NumberHolder place1, float newX) {
@@ -404,6 +389,9 @@ public class BitmapClockDrawer implements IClockDrawer {
     @Override
     public void setGravity(int gravity) {
         this.gravity = gravity;
+        if (getMeasuredHeight() != 0) {
+            updateTime(hours, minutes, true);
+        }
     }
 
     @Override
@@ -419,15 +407,15 @@ public class BitmapClockDrawer implements IClockDrawer {
 
     @Override
     public void draw(Bitmap canvas) {
-        canvas.eraseColor(Color.TRANSPARENT);
+        canvas.eraseColor(backgrounColor);
         draw(new Canvas(canvas));
     }
 
     @Override
     public void draw(Canvas canvas) {
-        float scale = canvas.getHeight()/(float)measuredHeight;
-        drawCache(canvas,scale);
-
+        float scaleX = canvas.getWidth() / (float) measuredWidth;
+        float scaleY = canvas.getHeight() / (float) measuredHeight;
+        drawCache(canvas, Math.min(scaleX, scaleY));
 
         //canvas.save();
         //canvas.translate(place2.x, place2.y);
@@ -451,17 +439,27 @@ public class BitmapClockDrawer implements IClockDrawer {
 
     private void drawCache(Canvas canvas, float scale) {
         canvas.save();
+        int x = 0;
+        if (hours >= 10) {
+            x += getX(HoursPositioning.clockPads.get(hours / 10).first);
+        } else {
+            x += getX(HoursPositioning.clockPads.get(hours).first);
+        }
+        //Paint p = new Paint();
+        //p.setColor(Color.BLACK);
+        //p.setStyle(Paint.Style.FILL);
+        //canvas.drawRect(minWidth(hours, minutes, measuredHeight) * scale, 0, 1, canvas.getHeight(), p);
 
         canvas.save();
 
         //draw hours
-        canvas.translate(place1.x*scale, 0);
+        canvas.translate(place1.x * scale, 0);
         drawNumber(canvas, place1, place1.bgOld, scale);
         drawNumber(canvas, place1, place1.bgCurrent, scale);
         canvas.restore();
 
         canvas.save();
-        canvas.translate(place2.x*scale, 0);
+        canvas.translate(place2.x * scale, 0);
 
         drawNumber(canvas, place2, place2.bgOld, scale);
         drawNumber(canvas, place2, place2.bgCurrent, scale);
@@ -469,15 +467,15 @@ public class BitmapClockDrawer implements IClockDrawer {
 
         //draw minutes
         canvas.save();
-        canvas.translate(place3.x*scale, 0);
-        canvas.translate(0, -context.getResources().getDimensionPixelSize(R.dimen.minute_bottom_padding)*scale);
+        canvas.translate(place3.x * scale, 0);
+        canvas.translate(0, -context.getResources().getDimensionPixelSize(R.dimen.minute_bottom_padding) * scale);
         drawNumber(canvas, place3, place3.bgOld, scale);
         drawNumber(canvas, place3, place3.bgCurrent, scale);
         canvas.restore();
 
         canvas.save();
-        canvas.translate(place4.x*scale, 0);
-        canvas.translate(0, -context.getResources().getDimensionPixelSize(R.dimen.minute_bottom_padding)*scale);
+        canvas.translate(place4.x * scale, 0);
+        canvas.translate(0, -context.getResources().getDimensionPixelSize(R.dimen.minute_bottom_padding) * scale);
         drawNumber(canvas, place4, place4.bgOld, scale);
         drawNumber(canvas, place4, place4.bgCurrent, scale);
         canvas.restore();
@@ -515,10 +513,16 @@ public class BitmapClockDrawer implements IClockDrawer {
         if (bitmap != null) {
 
             Bitmap frame = bitmap.getBitmapFrame();
-            canvas.translate(0, canvas.getHeight() - holder.numberHeight*scale);
-            RectF dstRect = new RectF(0, 0, holder.numberWidth*scale, holder.numberHeight*scale);
+            canvas.translate(0, canvas.getHeight() - holder.numberHeight * scale);
+            RectF dstRect = new RectF(0, 0, holder.numberWidth * scale, holder.numberHeight * scale);
 
             canvas.drawBitmap(frame, null, dstRect, numberPaint);
+
+            //Paint p = new Paint();
+            //p.setColor(Color.argb(50, 0, 0, 0));
+            //p.setStyle(Paint.Style.FILL);
+            //
+            //canvas.drawRect(0, 0, holder.numberWidth * scale, holder.numberHeight * scale, p);
             //frame.setBounds(0, 0, frame.getIntrinsicWidth(), frame.getIntrinsicHeight());
             //frame.draw(canvas);
             //canvas.translate(0, -(getMeasuredHeight() - frame.getIntrinsicHeight()));
@@ -558,6 +562,11 @@ public class BitmapClockDrawer implements IClockDrawer {
     }
 
     @Override
+    public void setBackgroundColor(int red) {
+        backgrounColor = red;
+    }
+
+    @Override
     public int getMinWidth(int height) {
         return Math.round(minWidth(24, 0) * (height / (float) minResHeight));
     }
@@ -574,6 +583,21 @@ public class BitmapClockDrawer implements IClockDrawer {
         return minWidth(hours, minutes) * height / minResHeight;
     }
 
+    private float getLeftOffset(List<HoursPositioning.Position> position) {
+        float x = 0;
+        if (position.get(0).number == -1) {
+            x += getX(position.get(1).x);
+        } else {
+            x += getX(position.get(0).x);
+        }
+        if (hours >= 10) {
+            x += getX(HoursPositioning.clockPads.get(hours / 10).first);
+        } else {
+            x += getX(HoursPositioning.clockPads.get(hours).first);
+        }
+        return x;
+    }
+
     public float minWidth(int hours, int minutes) {
         float width = 0;
 
@@ -586,28 +610,34 @@ public class BitmapClockDrawer implements IClockDrawer {
             width = width + getX(hourPosition.get(1).x);
         }
         width += getX(minutesOffset.x);
-        width += getX(minutesPosition.get(1).x) + getNumberMinutes(minutesPosition.get(1).number).getBitmapFrame(40).getWidth();
+        width += getX(minutesPosition.get(1).x) + place4.numberWidth;
+
         if (small) {
-            if (hours == 24) {
-                hours = 0;
-            }
-            if (hours >= 10) {
-                width -= (getX(HoursPositioning.clockPads.get(hours / 10).first));
-                if (hourPosition.get(0).number != -1) {
-                    width -= getX(hourPosition.get(0).x);
-                } else {
-                    width -= getX(hourPosition.get(1).x);
-                }
-            } else {
-                width -= getX(HoursPositioning.clockPads.get(hours).first);
-                if (hourPosition.get(0).number != -1) {
-                    width -= getX(hourPosition.get(0).x);
-                } else {
-                    width -= getX(hourPosition.get(1).x);
-                }
-            }
+            width -= getLeftOffset(hourPosition);
             width -= getX(HoursPositioning.clockPads.get(minutes % 10).second);
         }
+
+        //if (small) {
+        //    if (hours == 24) {
+        //        hours = 0;
+        //    }
+        //    if (hours >= 10) {
+        //        width -= (getX(HoursPositioning.clockPads.get(hours / 10).first));
+        //        if (hourPosition.get(0).number != -1) {
+        //            width -= getX(hourPosition.get(0).x);
+        //        } else {
+        //            width -= getX(hourPosition.get(1).x);
+        //        }
+        //    } else {
+        //        width -= getX(HoursPositioning.clockPads.get(hours).first);
+        //        if (hourPosition.get(0).number != -1) {
+        //            width -= getX(hourPosition.get(0).x);
+        //        } else {
+        //            width -= getX(hourPosition.get(1).x);
+        //        }
+        //    }
+        //    width -= getX(HoursPositioning.clockPads.get(minutes % 10).second);
+        //}
         return width;
     }
 

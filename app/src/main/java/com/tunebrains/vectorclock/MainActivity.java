@@ -1,6 +1,7 @@
 package com.tunebrains.vectorclock;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
         smallDrawer.setNumberScale(50);
         smallDrawer.setIs24h(is24h);
         smallDrawer.setSmall(true);
-
+        smallDrawer.setGravity(Gravity.LEFT);
+        smallDrawer.setBackgroundColor(Color.RED);
         clockWidth = getResources().getDimensionPixelSize(R.dimen.clock_width);
         clockHeight = getResources().getDimensionPixelSize(R.dimen.clock_height);
 
@@ -144,6 +146,36 @@ public class MainActivity extends AppCompatActivity {
                         largeDrawer.updateTime(startTime);
                     }
                     smallDrawer.updateTime(startTime);
+                }
+            }
+        });
+
+        findViewById(R.id.gravity_center).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                smallDrawer.setAnimated(false);
+                smallDrawer.setGravity(Gravity.CENTER);
+                smallDrawer.setAnimated(true);
+                if (DRAW_LARGE){
+                    largeDrawer.setGravity(Gravity.CENTER);
+                }
+            }
+        });
+        findViewById(R.id.gravity_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                smallDrawer.setGravity(Gravity.LEFT);
+                if (DRAW_LARGE){
+                    largeDrawer.setGravity(Gravity.LEFT);
+                }
+            }
+        });
+        findViewById(R.id.gravity_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                smallDrawer.setGravity(Gravity.RIGHT);
+                if (DRAW_LARGE){
+                    largeDrawer.setGravity(Gravity.RIGHT);
                 }
             }
         });

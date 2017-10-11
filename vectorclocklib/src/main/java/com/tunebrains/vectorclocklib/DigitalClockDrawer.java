@@ -226,6 +226,11 @@ public class DigitalClockDrawer implements IClockDrawer {
     }
 
     @Override
+    public void setBackgroundColor(int red) {
+
+    }
+
+    @Override
     public void setGravity(int gravity) {
         this.gravity = gravity;
     }

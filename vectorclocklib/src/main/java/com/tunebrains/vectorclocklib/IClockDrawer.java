@@ -37,4 +37,6 @@ public interface IClockDrawer {
     int getMinWidth(int height);
 
     void setSmall(boolean small);
+
+    void setBackgroundColor(int red);
 }
