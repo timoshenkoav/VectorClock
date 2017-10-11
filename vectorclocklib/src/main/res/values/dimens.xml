@@ -25,5 +25,9 @@
     <dimen name="minutes_7_right_pad">9dp</dimen>
     <dimen name="minutes_8_right_pad">9dp</dimen>
     <dimen name="minutes_9_right_pad">9dp</dimen>
+    <dimen name="hours_number_height">90dp</dimen>
+    <dimen name="hours_number_width">140dp</dimen>
+    <dimen name="minutes_number_height">20dp</dimen>
+    <dimen name="minutes_number_width">31dp</dimen>
 
 </resources>
