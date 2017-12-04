@@ -8,6 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <com.tunebrains.vectorclocklib.BitmapDigitalClock
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#f00"
+            android:id="@+id/bitmap_digital_clock"/>
     <ImageView
         android:id="@+id/digital_clock_image"
         android:layout_width="wrap_content"

@@ -67,6 +67,7 @@ public class BitmapDigitalClock extends View {
         drawer.setIs24h(true);
         minWidth = getResources().getDimensionPixelSize(R.dimen.min_clock_width);
         minHeight = getResources().getDimensionPixelSize(R.dimen.min_clock_height);
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     @Override

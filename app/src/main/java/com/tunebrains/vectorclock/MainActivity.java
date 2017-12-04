@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import com.tunebrains.vectorclocklib.BitmapDigitalClock;
 import com.tunebrains.vectorclocklib.DigitalClockDrawer;
 import com.tunebrains.vectorclocklib.IClockDrawer;
 import com.tunebrains.vectorclocklib.VectorNumberAnimator;
@@ -36,13 +37,14 @@ public class MainActivity extends AppCompatActivity {
     private int smallWidth;
 
     private static final boolean DRAW_LARGE = true;
-    private boolean is24h = false;
+    private boolean is24h = true;
 
+    BitmapDigitalClock bitmap_digital_clock;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        bitmap_digital_clock = (BitmapDigitalClock) findViewById(R.id.bitmap_digital_clock);
         smallClock = (ImageView) findViewById(R.id.small_clock_image);
         startTime = System.currentTimeMillis();
         handler = new Handler();
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         smallDrawer.setBackgroundColor(Color.RED);
         clockWidth = getResources().getDimensionPixelSize(R.dimen.clock_width);
         clockHeight = getResources().getDimensionPixelSize(R.dimen.clock_height);
-
+        bitmap_digital_clock.setIs24h(is24h);
         smallHeight = getResources().getDimensionPixelSize(R.dimen.small_clock_height);
         smallWidth = smallDrawer.getMinWidth(smallHeight);
 
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 is24h = !is24h;
                 smallDrawer.setIs24h(is24h);
                 largeDrawer.setIs24h(is24h);
+                bitmap_digital_clock.setIs24h(is24h);
             }
         });
 
@@ -102,15 +105,15 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                synchronized (MainActivity.this) {
-                    if (DRAW_LARGE) {
-                        largeDrawer.draw(bitmap);
-                        im.setImageBitmap(bitmap);
-                    }
-                    smallDrawer.draw(smallBitmap);
-                    smallClock.setImageBitmap(smallBitmap);
-                }
-                handler.postDelayed(this, 1);
+                //synchronized (MainActivity.this) {
+                //    if (DRAW_LARGE) {
+                //        largeDrawer.draw(bitmap);
+                //        im.setImageBitmap(bitmap);
+                //    }
+                //    smallDrawer.draw(smallBitmap);
+                //    smallClock.setImageBitmap(smallBitmap);
+                //}
+                //handler.postDelayed(this, 1);
             }
         }, 1);
         findViewById(R.id.size_increase).setOnClickListener(new View.OnClickListener() {
@@ -122,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                         largeDrawer.updateTime(startTime);
                     }
                     smallDrawer.updateTime(startTime);
+                    bitmap_digital_clock.updateTime(startTime);
                 }
             }
         });
@@ -134,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                         largeDrawer.updateTime(startTime);
                     }
                     smallDrawer.updateTime(startTime);
+                    bitmap_digital_clock.updateTime(startTime);
                 }
             }
         });
@@ -146,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
                         largeDrawer.updateTime(startTime);
                     }
                     smallDrawer.updateTime(startTime);
+                    bitmap_digital_clock.updateTime(startTime);
                 }
             }
         });
