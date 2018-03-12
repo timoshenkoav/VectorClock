@@ -523,10 +523,12 @@ public class BitmapClockDrawer implements IClockDrawer {
         if (bitmap != null) {
 
             Bitmap frame = bitmap.getBitmapFrame();
-            canvas.translate(0, canvas.getHeight() - holder.numberHeight * scale);
-            RectF dstRect = new RectF(0, 0, holder.numberWidth * scale, holder.numberHeight * scale);
+            if (frame!=null) {
+                canvas.translate(0, canvas.getHeight() - holder.numberHeight * scale);
+                RectF dstRect = new RectF(0, 0, holder.numberWidth * scale, holder.numberHeight * scale);
 
-            canvas.drawBitmap(frame, null, dstRect, numberPaint);
+                canvas.drawBitmap(frame, null, dstRect, numberPaint);
+            }
 
             //Paint p = new Paint();
             //p.setColor(Color.argb(50, 0, 0, 0));
